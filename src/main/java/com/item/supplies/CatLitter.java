@@ -1,6 +1,7 @@
 package main.java.com.item.supplies;
 
 import static java.lang.Math.*;
+import static utilities.Builders.getThe_Day;
 
 import java.security.*;
 import main.java.com.item.*;
@@ -8,7 +9,9 @@ import main.java.com.item.supplies.enums.*;
 
 
 
-/** The type Cat liter. */
+/**
+ * The type Cat liter.
+ */
 public class CatLitter extends Supplies {
   // The size of the cat liter.
   private int size;
@@ -19,15 +22,33 @@ public class CatLitter extends Supplies {
    * @param size the size
    */
   public CatLitter(int size) {
+    super();
+    
+    this.size        = size;
+    super.supplyType = SupplyType.CatLitter;
     super.setDayArrived(0);
     super.setName("Cat Litter");
-    this.size = size;
+    super.setListPrice(round(new SecureRandom().nextDouble(100)));
+    super.setPurchasePrice(0);
+    super.setSalePrice(round(new SecureRandom().nextDouble(getListPrice())));
+    super.setDayArrived(getThe_Day());
+    super.setDaySold(0);
   }
 
-  /** Default Constructor of CatLiter object */
+  /**
+   * Default Constructor of CatLiter object
+   */
   public CatLitter() {
     super();
+
     super.supplyType = SupplyType.CatLitter;
+    this.size        = 10;
+    super.setName("CatLitter");
+    super.setListPrice(round(new SecureRandom().nextDouble(100)));
+    super.setPurchasePrice(0);
+    super.setSalePrice(round(new SecureRandom().nextDouble(getListPrice())));
+    super.setDayArrived(getThe_Day());
+    super.setDaySold(0);
   }
 
   public CatLitter(
@@ -39,20 +60,40 @@ public class CatLitter extends Supplies {
       int dayArrived,
       int size) {
     super(name, purchasePrice, listPrice, salePrice, dayArrived, daySold);
+
     super.setDayArrived(0);
-    super.setName("CatLitter");
-    double newPurchasePrice = round(new SecureRandom().nextDouble(100));
-    super.setPurchasePrice(newPurchasePrice);
-    super.setListPrice(round(newPurchasePrice * (double) 2));
+    super.setName("Cat Litter");
+    super.supplyType = SupplyType.CatLitter;
+    // double newPurchasePrice = round(new SecureRandom().nextDouble(100));
+    // super.setPurchasePrice(newPurchasePrice);
+    // super.setListPrice(round(newPurchasePrice * (double) 2));
     this.size = size;
   }
 
-  public CatLitter(String... fArgs) {
-    super(fArgs[0], Double.parseDouble(fArgs[1]), Double.parseDouble(fArgs[2]), Double.parseDouble(fArgs[3]), Integer.parseInt(fArgs[4]), Integer.parseInt(fArgs[5]));
-    if (fArgs.length > 6) {
-      this.size = Integer.parseInt(fArgs[6]);
+  public CatLitter(String[] fArgs) {
+    super();
+
+    if (fArgs.length <= 0) {
+      this.size = 10;
+      super.setName("CatLitter");
+      super.setListPrice(round(new SecureRandom().nextDouble(100)));
+      super.setPurchasePrice(0);
+      super.setSalePrice(round(new SecureRandom().nextDouble(getListPrice())));
+      super.setDayArrived(getThe_Day());
+      super.setDaySold(0);
     } else {
-      this.size = 0;
+      // TODO: Implement this. Check what's not being passed in.
+      for (int i = 0; i < fArgs.length; i++) {
+        switch (fArgs[i]) {
+          case "size" -> this.size = Integer.parseInt(fArgs[i + 1]);
+          case "name" -> super.setName(fArgs[i + 1]);
+          case "purchasePrice" -> super.setPurchasePrice(Double.parseDouble(fArgs[i + 1]));
+          case "listPrice" -> super.setListPrice(Double.parseDouble(fArgs[i + 1]));
+          case "salePrice" -> super.setSalePrice(Double.parseDouble(fArgs[i + 1]));
+          case "daySold" -> super.setDaySold(Integer.parseInt(fArgs[i + 1]));
+          case "dayArrived" -> super.setDayArrived(Integer.parseInt(fArgs[i + 1]));
+        }
+      }
     }
   }
 
@@ -73,4 +114,5 @@ public class CatLitter extends Supplies {
   public void setSize(int size) {
     this.size = size;
   }
+
 }

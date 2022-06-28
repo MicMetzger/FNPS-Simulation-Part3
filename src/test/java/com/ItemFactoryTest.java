@@ -24,8 +24,8 @@ class ItemFactoryTest {
 
   /**
    * <p>
-   * The test is to create a random item type and then assure that the ItemFactory.createItem() method returns an Item referenced by it's subclass,
-   * Supplies..
+   * The test is to create a random item type and then assure that the ItemFactory.createItem() 
+   * method returns an Item referenced by it's subclass, Supplies.
    * </p>
    * <p>
    * (Exception) ItemFactoryException
@@ -59,19 +59,19 @@ class ItemFactoryTest {
     suppliesFactory.add(ItemFactory.createItem(randomItemType()));
     suppliesFactory.add(ItemFactory.createItem(randomItemType()));
 
-    assertEquals(itemFactory.size(), 6);
-    assertTrue(itemFactory.get(0) instanceof Supplies);
-    System.out.println(itemFactory.get(0));
-    assertTrue(itemFactory.get(1) instanceof Supplies);
-    System.out.println(itemFactory.get(1));
-    assertTrue(itemFactory.get(2) instanceof Supplies);
-    System.out.println(itemFactory.get(2));
-    assertTrue(itemFactory.get(3) instanceof Supplies);
-    System.out.println(itemFactory.get(3));
-    assertTrue(itemFactory.get(4) instanceof Supplies);
-    System.out.println(itemFactory.get(4));
-    assertTrue(itemFactory.get(5) instanceof Supplies);
-    System.out.println(itemFactory.get(5));
+    assertEquals(suppliesFactory.size(), 6);
+    assertTrue(suppliesFactory.get(0) instanceof Supplies);
+    System.out.println(suppliesFactory.get(0));
+    assertTrue(suppliesFactory.get(1) instanceof Supplies);
+    System.out.println(suppliesFactory.get(1));
+    assertTrue(suppliesFactory.get(2) instanceof Supplies);
+    System.out.println(suppliesFactory.get(2));
+    assertTrue(suppliesFactory.get(3) instanceof Supplies);
+    System.out.println(suppliesFactory.get(3));
+    assertTrue(suppliesFactory.get(4) instanceof Supplies);
+    System.out.println(suppliesFactory.get(4));
+    assertTrue(suppliesFactory.get(5) instanceof Supplies);
+    System.out.println(suppliesFactory.get(5));
   }
 
   // @Test

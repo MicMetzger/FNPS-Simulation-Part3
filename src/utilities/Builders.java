@@ -9,7 +9,16 @@ import main.java.com.item.supplies.enums.*;
 
 
 public record Builders() {
-
+  private static int The_Day = 0;
+  
+  static void setThe_Day(int day) {
+    The_Day = day;
+  }
+  
+  public static int getThe_Day() {
+    return The_Day;
+  }
+  
   // Data helpers
   public static final ArrayList<String> COLORS =
       new ArrayList<String>(Arrays.asList("Black", "Brown", "White", "Gray", "Red"));
