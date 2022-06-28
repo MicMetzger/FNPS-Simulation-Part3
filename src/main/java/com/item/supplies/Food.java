@@ -10,7 +10,7 @@ import main.java.com.item.supplies.enums.*;
 public class Food extends Supplies {
   private int        size;
   private AnimalType animal;
-  private Type       type;
+  private FoodType   type;
 
   public Food(
       String name,
@@ -21,7 +21,7 @@ public class Food extends Supplies {
       int daySold,
       int size,
       AnimalType animal,
-      Type type) {
+      FoodType type) {
     super(name, purchasePrice, listPrice, salePrice, dayArrived, daySold);
     this.size = size;
     this.animal = animal;
@@ -32,7 +32,7 @@ public class Food extends Supplies {
 	  super.supplyType = SupplyType.Food;
   }
 
-  public Food(int size, AnimalType animal, Type type) {
+  public Food(int size, AnimalType animal, FoodType type) {
     super(animal.toString() + " Food");
     double newPurchasePrice = round(new SecureRandom().nextDouble(100));
     super.setPurchasePrice(newPurchasePrice);
@@ -43,6 +43,8 @@ public class Food extends Supplies {
     this.type = type;
     super.supplyType = SupplyType.Food;
   }
+
+  public Food(String... strings) {}
 
   public int getSize() {
     return size;
@@ -64,11 +66,11 @@ public class Food extends Supplies {
     this.animal = animal;
   }
 
-  public Type getType() {
+  public FoodType getType() {
     return type;
   }
 
-  public void setType(Type type) {
+  public void setType(FoodType type) {
     this.type = type;
   }
 }

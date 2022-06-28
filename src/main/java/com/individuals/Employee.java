@@ -333,7 +333,8 @@ public class Employee implements Individual, MessageReceiver {
           new Random().nextInt(2) == 1));
       case "Food" -> newPackage.setItem(
           new Food(name, purchasePrice, purchasePrice * 2, salePrice, daySold, expectedDeliveryDate, new Random().nextInt(100),
-              AnimalType.values()[new Random().nextInt(AnimalType.values().length)], Type.values()[new Random().nextInt(Type.values().length)]));
+              AnimalType.values()[new Random().nextInt(AnimalType.values().length)], FoodType.values()[new Random().nextInt(
+              FoodType.values().length)]));
       case "Leash" -> newPackage.setItem(new Leash(name, purchasePrice, purchasePrice * 2, salePrice, daySold, expectedDeliveryDate,
           AnimalType.values()[new Random().nextInt(AnimalType.values().length)]));
 

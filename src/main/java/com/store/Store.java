@@ -160,13 +160,13 @@ public class Store implements EventObservable {
     inventory.add(
         new Food(
             new Random().nextInt(100),
-            AnimalType.values()[new Random().nextInt(AnimalType.values().length)],
-            Type.values()[new Random().nextInt(Type.values().length)]));
-    inventory.add(new CatLitter(new Random().nextInt(100)));
-    inventory.add(new Toy(AnimalType.values()[new Random().nextInt(AnimalType.values().length)]));
-    inventory.add(new Leash(AnimalType.values()[new Random().nextInt(AnimalType.values().length)]));
-    inventory.add(new Treat(AnimalType.values()[new Random().nextInt(AnimalType.values().length)]));
-
+            randomAnimalType(),
+            randomFoodType()));
+    inventory.add(new CatLitter(randomSizeINT(0, 100)));
+    inventory.add(new Toy(randomAnimalType()));
+    inventory.add(new Leash(randomAnimalType()));
+    inventory.add(new Treat(randomAnimalType()));
+    
     inventory.add(ItemFactory.createItem(randomItemType()));
     inventory.add(ItemFactory.createItem(randomItemType()));
     inventory.add(ItemFactory.createItem(randomItemType()));

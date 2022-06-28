@@ -40,6 +40,17 @@ public class Treat extends Supplies {
     super.supplyType = SupplyType.Treat;
   }
 
+  public Treat(String... fArgs) {
+    super(fArgs[0], Double.parseDouble(fArgs[1]), Double.parseDouble(fArgs[2]), Double.parseDouble(fArgs[3]), Integer.parseInt(fArgs[4]), Integer.parseInt(fArgs[5]));
+    if (fArgs.length > 6) {
+      this.animal = AnimalType.valueOf(fArgs[6]);
+    } else {
+      this.animal = randomAnimal();
+    }
+    super.setName("Treat");
+    super.supplyType = SupplyType.Treat;
+  }
+
   public AnimalType getAnimal() {
     return animal;
   }

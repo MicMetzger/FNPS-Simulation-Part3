@@ -47,6 +47,15 @@ public class CatLitter extends Supplies {
     this.size = size;
   }
 
+  public CatLitter(String... fArgs) {
+    super(fArgs[0], Double.parseDouble(fArgs[1]), Double.parseDouble(fArgs[2]), Double.parseDouble(fArgs[3]), Integer.parseInt(fArgs[4]), Integer.parseInt(fArgs[5]));
+    if (fArgs.length > 6) {
+      this.size = Integer.parseInt(fArgs[6]);
+    } else {
+      this.size = 0;
+    }
+  }
+
   /**
    * Gets the cat liter size.
    *

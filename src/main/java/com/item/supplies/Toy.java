@@ -1,6 +1,7 @@
 package main.java.com.item.supplies;
 
 import static java.lang.Math.*;
+import static main.java.com.item.pets.enums.AnimalType.randomAnimal;
 
 import java.security.*;
 import main.java.com.item.*;
@@ -49,6 +50,17 @@ public class Toy extends Supplies {
    */
   public Toy() {
     super();
+    super.supplyType = SupplyType.Toy;
+  }
+
+  public Toy(String... fArgs) {
+    super(fArgs[0], Double.parseDouble(fArgs[1]), Double.parseDouble(fArgs[2]), Double.parseDouble(fArgs[3]), Integer.parseInt(fArgs[4]), Integer.parseInt(fArgs[5]));
+    if (fArgs.length > 6) {
+      this.animal = AnimalType.valueOf(fArgs[6]);
+    } else {
+      this.animal = randomAnimal();
+    }
+    super.setName("Toy");
     super.supplyType = SupplyType.Toy;
   }
 

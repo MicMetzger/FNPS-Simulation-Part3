@@ -46,6 +46,8 @@ public class Leash extends Supplies {
     super.supplyType = SupplyType.Leash;
   }
 
+  public Leash(String... strings) {}
+
   /**
    * Gets the animal
    *

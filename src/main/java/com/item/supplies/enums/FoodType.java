@@ -1,12 +1,12 @@
 package main.java.com.item.supplies.enums;
 
-public enum Type {
+public enum FoodType {
   Solid("Solid"),
   Soft("Soft");
 
   public final String name;
 
-  Type(String type) {
+  FoodType(String type) {
     name = type;
   }
 }
