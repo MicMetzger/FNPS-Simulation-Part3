@@ -5,9 +5,6 @@ import main.java.com.individuals.*;
 
 
 /**
- * @param <Sub>  Subject
- * @param <Obs>  Observer
- * @param <Argu> Argument type
  */
 public interface EventObservable {
 
