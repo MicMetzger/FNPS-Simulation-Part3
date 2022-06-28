@@ -5,6 +5,7 @@ import static main.java.com.item.pets.enums.Animal.*;
 import java.security.*;
 import java.text.*;
 import java.util.*;
+import java.util.concurrent.atomic.*;
 import main.java.com.events.*;
 import main.java.com.events.task.*;
 import main.java.com.item.*;
@@ -22,21 +23,20 @@ public class Employee implements Individual, MessageReceiver {
   ArrayList<Item>            inventory;
   ArrayList<Pet>             sick;
   ArrayList<DeliveryPackage> mailBox;
-  protected Employee      base;
-  private   double        cash;
-  private   double        earning;
-  private   int           sold;
-  private   int           workedDays;
-  private   double        cashWithdrawn;
-  private   EmployeeTask  task;
-  private   EmployeeState state;
-  private   boolean       ACTIVE;
-  private   ReceiverType  type;
+  protected            Employee      base;
+  private              double        cash;
+  private              double        earning;
+  private              int           sold;
+  private              int           workedDays;
+  private              double        cashWithdrawn;
+  private              EmployeeTask  task;
+  private              EmployeeState state;
+  private              boolean       ACTIVE;
+  private              ReceiverType  type;
+  private static final AtomicInteger counter = new AtomicInteger(0);
+  private final        int           ID;
 
 
-  public void setType(ReceiverType trainer) {
-    this.type = trainer;
-  }
 
   public enum EmployeeState {
     IDLE("Idle"),
@@ -51,8 +51,9 @@ public class Employee implements Individual, MessageReceiver {
   }
 
 
+  /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constructors ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
   public Employee(int workedDays) {
-    super();
+    ID              = counter.incrementAndGet();
     this.workedDays = workedDays;
     inventory       = new ArrayList<>();
     cash            = 0;
@@ -64,6 +65,7 @@ public class Employee implements Individual, MessageReceiver {
   }
 
   public Employee() {
+    ID         = counter.incrementAndGet();
     workedDays = 0;
     inventory  = new ArrayList<>();
     cash       = 0;
@@ -73,8 +75,9 @@ public class Employee implements Individual, MessageReceiver {
     state      = EmployeeState.IDLE;
     ACTIVE     = false;
   }
-  
+
   public Employee(Employee employee) {
+    ID              = counter.incrementAndGet();
     this.workedDays = employee.workedDays;
     this.inventory  = employee.inventory;
     this.cash       = employee.cash;
@@ -86,43 +89,102 @@ public class Employee implements Individual, MessageReceiver {
     this.type       = employee.type;
   }
 
+
+
+  /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Getters ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
+  /**
+   * Gets the total dollar and cent earning gained from sales closed by this employee.
+   *
+   * @return the earning total dollar and cent amount.
+   */
   public double getEarning() {
     return earning;
   }
 
-  private void setEarning(double earning) {
-    this.earning += earning;
-  }
-
+  /**
+   * Gets the total number of items sold by this specific employee.
+   *
+   * @return the sold amount of items.
+   */
   public int getSold() {
     return sold;
   }
 
-  private void upSold() {
-    this.sold++;
-  }
-
+  /**
+   * Gets the employee's state.
+   *
+   * @return the state
+   */
   public EmployeeState getState() {
     return state;
   }
 
-  public void setState(EmployeeState state) {
-    this.state = state;
-  }
-
+  /**
+   * Gets the current event task assigned to this employee if one exists.
+   *
+   * @return the task
+   */
   public EmployeeTask getTask() {
     return task;
   }
 
+  /**
+   * Gets employee ID.
+   *
+   * @return the ID
+   */
+  public int getID() {
+    return ID;
+  }
+
+  /**
+   * Reports if the employee is active and working in a store for the day.
+   *
+   * @return the ACTIVE
+   */
+  public boolean isACTIVE() {
+    return ACTIVE;
+  }
+
+
+  /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Setters ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
+  /**
+   * Updates the amount the employee has earned through sales.
+   *
+   * @param earning the amount earned from a sale.
+   */
+  private void setEarning(double earning) {
+    this.earning += earning;
+  }
+
+
+  /**
+   * Sets the state of the employee.
+   *
+   * @param state the state to set.
+   */
+  public void setState(EmployeeState state) {
+    this.state = state;
+  }
+
+  /**
+   * Registers a task to the employee.
+   *
+   * @param task the event task for this employee to set
+   */
   public void setTask(EmployeeTask task) {
     this.task = task;
   }
 
   /**
-   * @return the ACTIVE
+   * Sets the MessageReceiver Individual object type.
+   *
+   * @param trainer the Individual MessageReceiver type being set.
    */
-  public boolean isACTIVE() {
-    return ACTIVE;
+  public void setType(ReceiverType trainer) {
+    this.type = trainer;
   }
 
   /**
@@ -130,6 +192,12 @@ public class Employee implements Individual, MessageReceiver {
    */
   public void setACTIVE(boolean ACTIVE) {
     this.ACTIVE = ACTIVE;
+  }
+
+
+  /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Methods ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+  private void upSold() {
+    this.sold++;
   }
 
   public void announce(String announcement) {
@@ -443,7 +511,7 @@ public class Employee implements Individual, MessageReceiver {
     }
   }
 
-  
+
   /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Individual Overrides ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
   @Override
   public String getNameExt() {
@@ -459,7 +527,7 @@ public class Employee implements Individual, MessageReceiver {
   public void setName(String name) {
     base.setName(name);
   }
-  
+
 
   /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ MessageReceiver Overrides ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
   @Override
@@ -486,5 +554,6 @@ public class Employee implements Individual, MessageReceiver {
 
     }
   }
+
 }
 

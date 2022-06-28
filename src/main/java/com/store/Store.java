@@ -62,6 +62,7 @@ public class Store implements EventObservable {
 
   private static final class InstanceHolder {
     private static final Store instance = new Store();
+
   }
 
   public static Store getInstance() {
@@ -91,23 +92,33 @@ public class Store implements EventObservable {
    * Initiate starting objects.
    */
   public void initiateStaff() {
+   /*  
     clerks.add(new Clerk());
     clerks.add(new Clerk());
     clerks.add(new Clerk());
-    trainers.add(new Trainer("Haphazard"));
+    trainers.add(new Trainer(pool.createObject(ReceiverType.TRAINER, )));
     trainers.add(new Trainer("Negative"));
     trainers.add(new Trainer("Positive"));
 
     employeeReceivers = new ArrayList<MessageReceiver>();
     employeeReceivers.addAll(clerks);
     employeeReceivers.addAll(trainers);
+     */
+
+    EmployeePool pool = new EmployeePool();
+    clerks.add(pool.createObject(ReceiverType.CLERK, ""));
+    clerks.add(pool.createObject(ReceiverType.CLERK, ""));
+    clerks.add(pool.createObject(ReceiverType.CLERK, ""));
+    trainers.add(pool.createObject(ReceiverType.TRAINER, "Haphazard"));
+    trainers.add(pool.createObject(ReceiverType.TRAINER, "Negative"));
+    trainers.add(pool.createObject(ReceiverType.TRAINER, "Positive"));
   }
 
   public void initiateAnimals() {
     // (size, color, broken, purebred) / (breed, age, health)
     inventory.add(
         new Dog(
-            Double.parseDouble(sizeFormat.format(new SecureRandom().nextDouble(50.0))),
+            Double.parseDouble(sizeFormat.format(new Random().nextDouble(50.0))),
             Color.values()[
                 new Random()
                     .nextInt(
@@ -140,7 +151,7 @@ public class Store implements EventObservable {
             randomSelectionbool[new Random().nextInt(1)]));
 
     // (size) / (breed, age, health)
-    inventory.add(new Snake(Double.parseDouble(sizeFormat.format(new Random().nextDouble(8)))));
+    inventory.add(new Snake(Double.parseDouble(sizeFormat.format(new SecureRandom().nextDouble(8)))));
   }
 
   public void initiateSupplies() {
@@ -573,4 +584,5 @@ public class Store implements EventObservable {
     }
 
   }
+
 }
