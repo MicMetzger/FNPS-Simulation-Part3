@@ -3,6 +3,8 @@ package main.java.com.item.addOns;
 import java.security.*;
 import main.java.com.item.*;
 
+
+
 public class VetCheckup extends ItemDecorator {
     // 1 - 4 checkups
     static final int quantity = new SecureRandom().nextInt(1, 5);
@@ -14,7 +16,7 @@ public class VetCheckup extends ItemDecorator {
     }
 
     public double getSalePrice() {
-        return Math.round(concreteItem.getSalePrice() + price);
+        return Math.round(super.concreteItem.getSalePrice() + price);
     }
 
 

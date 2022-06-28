@@ -3,6 +3,10 @@ package main.java.com.item.supplies;
 import static java.lang.Math.*;
 
 import java.security.*;
+import main.java.com.item.*;
+import main.java.com.item.supplies.enums.*;
+
+
 
 /** The type Cat liter. */
 public class CatLitter extends Supplies {
@@ -21,7 +25,10 @@ public class CatLitter extends Supplies {
   }
 
   /** Default Constructor of CatLiter object */
-  public CatLitter() {}
+  public CatLitter() {
+    super();
+    super.supplyType = SupplyType.CatLitter;
+  }
 
   public CatLitter(
       String name,

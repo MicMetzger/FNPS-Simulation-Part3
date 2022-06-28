@@ -1,6 +1,10 @@
 package main.java.com.item.supplies;
 
+import main.java.com.item.*;
 import main.java.com.item.pets.enums.*;
+import main.java.com.item.supplies.enums.*;
+
+
 
 public class Leash extends Supplies {
 
@@ -23,7 +27,9 @@ public class Leash extends Supplies {
     this.animal = AnimalType.valueOf(animal);
   }
 
-  /** Default constructor */
+  /**
+   * Default constructor
+   */
   public Leash(
       String name,
       double purchasePrice,
@@ -34,6 +40,10 @@ public class Leash extends Supplies {
       AnimalType animal) {
     super(name, purchasePrice, listPrice, salePrice, dayArrived, daySold);
     this.animal = animal;
+  }
+
+  public Leash() {
+    super.supplyType = SupplyType.Leash;
   }
 
   /**
@@ -53,4 +63,5 @@ public class Leash extends Supplies {
   public void setAnimal(String animal) {
     this.animal = AnimalType.valueOf(animal);
   }
+
 }

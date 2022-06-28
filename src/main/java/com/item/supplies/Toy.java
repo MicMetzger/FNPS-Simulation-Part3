@@ -3,8 +3,11 @@ package main.java.com.item.supplies;
 import static java.lang.Math.*;
 
 import java.security.*;
+import main.java.com.item.*;
 import main.java.com.item.pets.enums.*;
 import main.java.com.item.supplies.enums.*;
+
+
 
 public class Toy extends Supplies {
 
@@ -26,7 +29,8 @@ public class Toy extends Supplies {
       AnimalType animal) {
     super(name, purchasePrice, listPrice, salePrice, dayArrived, daySold);
     super.setName("Toy");
-    this.animal = animal;
+    this.animal      = animal;
+    super.supplyType = SupplyType.Toy;
   }
 
   public Toy(AnimalType animal) {
@@ -35,12 +39,17 @@ public class Toy extends Supplies {
     super.setListPrice(round(newPurchasePrice * (double) 2));
     super.setDayArrived(0);
     super.setName("Toy");
-    this.animal = animal;
+    this.animal      = animal;
+    super.supplyType = SupplyType.Toy;
+
   }
 
-  /** Default constructor */
+  /**
+   * Default constructor
+   */
   public Toy() {
     super();
-	  super.supplyType = SupplyType.Toy;
+    super.supplyType = SupplyType.Toy;
   }
+
 }

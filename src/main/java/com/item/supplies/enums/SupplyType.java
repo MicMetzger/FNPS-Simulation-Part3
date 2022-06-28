@@ -3,9 +3,9 @@ package main.java.com.item.supplies.enums;
 public enum SupplyType {
   Food("Food"),
   Leash("Leash"),
-  CatLiter("Cat Liter"),
+  CatLitter("CatLiter"),
   Toy("Toy"),
-	Treat("Treat");
+  Treat("Treat");
 
   private final String name;
 

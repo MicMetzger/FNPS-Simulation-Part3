@@ -24,7 +24,7 @@ public class VisitBank implements State {
    * The type Banking.
    */
   // public VisitBank(Employee employee, Store store) {
-  class Banking extends EmployeeTask {
+  class Banking extends EmployeeTask implements State {
     double amount;
     double cash;
     Employee employee;
@@ -64,6 +64,42 @@ public class VisitBank implements State {
       getEmployee().setTask(null);
       getEmployee().setState(EmployeeState.IDLE);
     }
+
+    @Override
+    public void enterState() {
+      
+    }
+
+    @Override
+    public void exitState() {
+
+    }
+
+    @Override
+    public void nextState() {
+
+    }
+
+    @Override
+    public boolean hasTask() {
+      return false;
+    }
+
+    @Override
+    public EmployeeTask getTask() {
+      return null;
+    }
+
+    @Override
+    public EmployeeTask getTask(Employee employee) {
+      return null;
+    }
+
+    @Override
+    public EventStatus setStatus(EventStatus status) {
+      return null;
+    }
+
   }
 
   @Override

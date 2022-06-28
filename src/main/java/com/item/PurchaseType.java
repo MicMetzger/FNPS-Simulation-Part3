@@ -13,7 +13,7 @@ interface DesiredItem {
 public enum PurchaseType implements DesiredItem {
 	Food(SupplyType.Food),
 	Leash(SupplyType.Leash),
-	CatLiter(SupplyType.CatLiter),
+	CatLiter(SupplyType.CatLitter),
 	Toy(SupplyType.Toy),
 	Treat(SupplyType.Treat),
 	Dog(AnimalType.Dog),

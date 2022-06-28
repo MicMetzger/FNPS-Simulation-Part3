@@ -1,6 +1,8 @@
 package main.java.com.item.addOns;
 
+
 import main.java.com.item.*;
+
 
 
 public class Insurance extends ItemDecorator{
@@ -12,8 +14,9 @@ public class Insurance extends ItemDecorator{
     }
 
 
+    @Override
     public double getSalePrice() {
-        return Math.round(concreteItem.getSalePrice() + price);
+        return Math.round(super.concreteItem.getSalePrice() + price);
     }
 
 

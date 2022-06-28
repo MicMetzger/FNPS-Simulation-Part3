@@ -2,6 +2,8 @@ package main.java.com.store;
 
 import static utilities.Builders.*;
 
+import factory.*;
+import factory.ItemFactory.*;
 import java.security.*;
 import java.util.*;
 import main.java.com.Logging.*;
@@ -165,7 +167,15 @@ public class Store implements EventObservable {
     inventory.add(new Leash(AnimalType.values()[new Random().nextInt(AnimalType.values().length)]));
     inventory.add(new Treat(AnimalType.values()[new Random().nextInt(AnimalType.values().length)]));
 
+    inventory.add(ItemFactory.createItem(randomItemType()));
+    inventory.add(ItemFactory.createItem(randomItemType()));
+    inventory.add(ItemFactory.createItem(randomItemType()));
+    inventory.add(ItemFactory.createItem(randomItemType()));
+    inventory.add(ItemFactory.createItem(randomItemType()));
+    inventory.add(ItemFactory.createItem(randomItemType()));
   }
+
+
 
   public void initStates() {
     states          = Collections.synchronizedList(new ArrayList<State>());

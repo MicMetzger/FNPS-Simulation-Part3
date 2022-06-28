@@ -2,10 +2,12 @@ package main.java.com.store;
 
 import main.java.com.item.*;
 
+
+
 public class DeliveryPackage {
-  private Item item;
+  private Item   item;
   private String packageName;
-  private int expectedDeliveryDate;
+  private int    expectedDeliveryDate;
 
   public DeliveryPackage(String packageName, int expectedDeliveryDate) {
     this.packageName = packageName;

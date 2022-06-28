@@ -6,7 +6,12 @@ import java.util.*;
 import main.java.com.events.task.*;
 import main.java.com.individuals.*;
 
-
+/* 
+public class LogManager {
+  private static final LogManager manager;
+  
+  
+} */
 
 public class Logger implements MessageReceiver {
   private static      Logger           logger;

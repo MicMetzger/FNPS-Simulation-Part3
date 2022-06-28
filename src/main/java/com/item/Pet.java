@@ -2,9 +2,11 @@ package main.java.com.item;
 
 import main.java.com.item.pets.enums.*;
 
+
+
 public abstract class Pet extends Item {
   protected Animal animal;
-  int age;
+  int     age;
   boolean healthy;
 
   public Pet(
@@ -18,8 +20,8 @@ public abstract class Pet extends Item {
       int age,
       boolean healthy) {
     super(name, purchasePrice, listPrice, salePrice, dayArrived, daySold, true);
-    this.animal = animal;
-    this.age = age;
+    this.animal  = animal;
+    this.age     = age;
     this.healthy = healthy;
     super.setAnimalIdentifier(true);
   }
@@ -27,8 +29,8 @@ public abstract class Pet extends Item {
   public Pet(Animal animal, int age, boolean healthy) {
     super();
     super.setAnimalIdentifier(true);
-    this.animal = animal;
-    this.age = age;
+    this.animal  = animal;
+    this.age     = age;
     this.healthy = healthy;
   }
 
@@ -101,13 +103,14 @@ public abstract class Pet extends Item {
   @Override
   public String toString() {
     return "Pet{"
-        + "breed="
-        + animal.breed
-        + ", age="
-        + age
-        + ", healthy="
-        + healthy
-        + "} "
-        + super.toString();
+           + "breed="
+           + animal.breed
+           + ", age="
+           + age
+           + ", healthy="
+           + healthy
+           + "} "
+           + super.toString();
   }
+
 }

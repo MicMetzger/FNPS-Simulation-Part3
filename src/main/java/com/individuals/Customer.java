@@ -1,6 +1,6 @@
 package main.java.com.individuals;
 
-import static java.lang.Math.*;
+import static java.lang.Math.round;
 
 import java.security.*;
 import java.util.*;
@@ -111,4 +111,5 @@ public class Customer implements Individual, MessageReceiver {
   public void setName(String name) {
 
   }
+
 }
