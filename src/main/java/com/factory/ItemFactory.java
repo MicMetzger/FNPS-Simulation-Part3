@@ -1,19 +1,17 @@
-package factory;
+package main.java.com.factory;
 
-import java.lang.reflect.*;
-import java.util.*;
 import main.java.com.item.*;
 import main.java.com.item.supplies.*;
 
 
 
 public class ItemFactory {
-
+  
   public enum ItemType {
-    CATLITTER(CatLitter::new), 
-    FOOD(Food::new), 
-    LEASH(Leash::new), 
-    TOY(Toy::new), 
+    CATLITTER(CatLitter::new),
+    FOOD(Food::new),
+    LEASH(Leash::new),
+    TOY(Toy::new),
     TREAT(Treat::new);
 
     private final ItemBuilder<Supplies, String[]> builder;

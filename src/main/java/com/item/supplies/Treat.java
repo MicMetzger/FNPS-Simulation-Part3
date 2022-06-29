@@ -2,7 +2,7 @@ package main.java.com.item.supplies;
 
 import static java.lang.Math.round;
 import static main.java.com.item.pets.enums.AnimalType.randomAnimal;
-import static utilities.Builders.getThe_Day;
+import static main.java.com.utilities.Builders.getThe_Day;
 
 import java.security.*;
 import main.java.com.item.*;

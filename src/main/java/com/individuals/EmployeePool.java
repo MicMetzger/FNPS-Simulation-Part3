@@ -1,7 +1,7 @@
 package main.java.com.individuals;
 
 import main.java.com.individuals.MessageReceiver.*;
-import utilities.*;
+import main.java.com.utilities.*;
 
 
 

@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="main.java.com.store.StoreApplication" type="Application" factoryName="Application" nameIsGenerated="true">
+    <option name="ALTERNATIVE_JRE_PATH" value="$PROJECT_DIR$/../../../../../../Program Files/AdoptOpenJDK/jdk-11.0.9.101-hotspot" />
+    <option name="MAIN_CLASS_NAME" value="main.java.com.store.StoreApplication" />
+    <module name="FNPS-Simulation-Part3" />
+    <option name="PROGRAM_PARAMETERS" value="$MODULE_WORKING_DIR$" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

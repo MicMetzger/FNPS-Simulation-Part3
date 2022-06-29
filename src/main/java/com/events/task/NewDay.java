@@ -7,7 +7,7 @@ import main.java.com.Logging.*;
 import main.java.com.events.*;
 import main.java.com.individuals.*;
 import main.java.com.store.*;
-import utilities.*;
+import main.java.com.utilities.*;
 
 
 

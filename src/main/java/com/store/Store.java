@@ -1,9 +1,9 @@
 package main.java.com.store;
 
-import static utilities.Builders.*;
+import static main.java.com.utilities.Builders.*;
 
-import factory.*;
-import factory.ItemFactory.*;
+import main.java.com.factory.*;
+import main.java.com.factory.ItemFactory.*;
 import java.security.*;
 import java.util.*;
 import main.java.com.Logging.*;
@@ -16,7 +16,6 @@ import main.java.com.item.addOns.*;
 import main.java.com.item.pets.*;
 import main.java.com.item.pets.enums.*;
 import main.java.com.item.supplies.*;
-import main.java.com.item.supplies.enums.*;
 
 
 

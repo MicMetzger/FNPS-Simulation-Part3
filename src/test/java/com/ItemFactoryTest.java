@@ -1,10 +1,10 @@
-package test.java.com;
+package java.com;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static utilities.Builders.randomItemType;
+import static main.java.com.utilities.Builders.randomItemType;
 
-import factory.*;
-import factory.ItemFactory.*;
+import main.java.com.factory.*;
+import main.java.com.factory.ItemFactory.*;
 import java.util.*;
 import main.java.com.item.*;
 import org.junit.jupiter.api.*;

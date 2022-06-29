@@ -1,4 +1,4 @@
-package test.java.com.Logging;
+package java.com.Logging;
 
 class LogTest {
   

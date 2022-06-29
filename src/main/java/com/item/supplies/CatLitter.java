@@ -1,7 +1,7 @@
 package main.java.com.item.supplies;
 
 import static java.lang.Math.*;
-import static utilities.Builders.getThe_Day;
+import static main.java.com.utilities.Builders.getThe_Day;
 
 import java.security.*;
 import main.java.com.item.*;
