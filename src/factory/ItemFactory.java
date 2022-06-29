@@ -10,12 +10,11 @@ import main.java.com.item.supplies.*;
 public class ItemFactory {
 
   public enum ItemType {
-    CATLITTER(CatLitter::new),
-    FOOD(Food::new),
-    LEASH(Leash::new),
-    TOY(Toy::new),
+    CATLITTER(CatLitter::new), 
+    FOOD(Food::new), 
+    LEASH(Leash::new), 
+    TOY(Toy::new), 
     TREAT(Treat::new);
-
 
     private final ItemBuilder<Supplies, String[]> builder;
     // private final ItemBuilder<Supplies> builder;
@@ -41,7 +40,7 @@ public class ItemFactory {
   public static class ItemFactoryException extends Exception {
     Throwable cause;
 
-    
+
     public Exception getCause() {
       return (Exception) cause;
     }

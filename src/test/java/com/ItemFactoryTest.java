@@ -33,7 +33,7 @@ class ItemFactoryTest {
    */
   @Test
   void testItemFactoryBuilderTypeCastTest() {
-    setUp();
+    // setUp();
     assertDoesNotThrow(() -> {
       try {
         itemFactory.add(ItemFactory.createItem(randomItemType()));

@@ -30,7 +30,7 @@ public class CatLitter extends Supplies {
     super.setName("Cat Litter");
     super.setListPrice(round(new SecureRandom().nextDouble(100)));
     super.setPurchasePrice(0);
-    super.setSalePrice(round(new SecureRandom().nextDouble(getListPrice())));
+    super.setSalePrice(round(new SecureRandom().nextDouble(50)));
     super.setDayArrived(getThe_Day());
     super.setDaySold(0);
   }
