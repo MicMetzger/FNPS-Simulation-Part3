@@ -1,4 +1,4 @@
-package test.java.com.Logging;
+package java.com.Logging;
 
 import static main.java.com.Logging.Logger.*;
 
@@ -54,7 +54,6 @@ class LoggerTest {
     SAVE();
     Assertions.assertTrue(TESTLOGPATH.exists());
     Assertions.assertSame(LOGINPUTPATH, TESTLOGPATH.getPath());
-    // tearDown();
   }
 
 
@@ -72,7 +71,6 @@ class LoggerTest {
     SAVE();
     Assertions.assertTrue(TESTLOGPATH.exists());
     Assertions.assertSame(LOGINPUTPATH, TESTLOGPATH.getPath());
-    // tearDown();
   }
   
   

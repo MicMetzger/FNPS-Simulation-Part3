@@ -14,7 +14,7 @@ public class VisitBank implements State {
   Store        storeState;
   EventStatus  status;
   EmployeeTask task;
-    
+
   public VisitBank(Store store) {
     this.storeState = store;
     this.status     = INCOMPLETE;
@@ -23,13 +23,12 @@ public class VisitBank implements State {
   /**
    * The type Banking.
    */
-  // public VisitBank(Employee employee, Store store) {
   class Banking extends EmployeeTask implements State {
-    double amount;
-    double cash;
+    double   amount;
+    double   cash;
     Employee employee;
-    
-    
+
+
     Banking(Employee employee, Store store, VisitBank visitBank) {
       super(TaskType.TASK_BANKING, INCOMPLETE, employee, visitBank);
       instance = store;
@@ -45,20 +44,19 @@ public class VisitBank implements State {
         status = IN_PROGRESS;
         super.statusChange(IN_PROGRESS);
         employee = this.getEmployee();
-        amount = storeState.goToBank(getEmployee());
-        cash = storeState.getCash();
+        amount   = storeState.goToBank(getEmployee());
+        cash     = storeState.getCash();
         end();
       }
     }
 
 
     /**
-     * End the task,
-     * and log the completion.
+     * End the task, and log the completion.
      */
     public void end() {
       super.statusChange(COMPLETE);
-      
+
       Logger.LOG(EventLog.bankingEvent(employee, amount, cash));
       super.getStatus().setAssigned(false);
       getEmployee().setTask(null);
@@ -67,7 +65,7 @@ public class VisitBank implements State {
 
     @Override
     public void enterState() {
-      
+
     }
 
     @Override
@@ -104,7 +102,7 @@ public class VisitBank implements State {
 
   @Override
   public void enterState() {
-    storeState.notifyReceivers("VisitBank", task);
+    storeState.notifyEmployees("VisitBank", task);
     exitState();
   }
 
@@ -140,4 +138,5 @@ public class VisitBank implements State {
     this.status = status;
     return status;
   }
+
 }

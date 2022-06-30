@@ -1,5 +1,5 @@
 package main.java.com.item.pets.enums;
-public interface AnimalInterface {
+interface AnimalInterface {
 	Breed getType();
 
 }

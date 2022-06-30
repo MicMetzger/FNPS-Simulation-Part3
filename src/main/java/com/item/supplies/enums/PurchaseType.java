@@ -1,7 +1,7 @@
-package main.java.com.item;
+package main.java.com.item.supplies.enums;
 
 import main.java.com.item.pets.enums.*;
-import main.java.com.item.supplies.enums.*;
+
 
 
 interface DesiredItem {

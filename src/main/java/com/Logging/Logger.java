@@ -13,17 +13,20 @@ public class LogManager {
   
 } */
 
+
+
 public class Logger implements MessageReceiver {
-  private static      Logger           logger;
-  private static      Log              LOG;
-  private static      String           LOGGERNAME;
-  public static final String           LOGFOLD      = "LOGS/";
-  public static final String           LOGFILE      = "Logger-";
-  public static       String           LOGINPUTPATH = "";
-  public static       SimpleDateFormat DATEFORMAT   = new SimpleDateFormat("yyyy-MM-dd");
-  private static      List<Log>        LOGS         = new ArrayList<>();
-  private static      int              LOG_COUNT    = 0;
-  protected static    int              ID_TAG       = 0;
+  // Eager Instantiation of Logger
+  private static volatile Logger           logger       = new Logger();
+  private static          Log              LOG;
+  private static          String           LOGGERNAME;
+  public static final     String           LOGFOLD      = "LOGS/";
+  public static final     String           LOGFILE      = "Logger-";
+  public static           String           LOGINPUTPATH = "";
+  public static           SimpleDateFormat DATEFORMAT   = new SimpleDateFormat("yyyy-MM-dd");
+  private static          List<Log>        LOGS         = new ArrayList<>();
+  private static          int              LOG_COUNT    = 0;
+  protected static        int              ID_TAG       = 0;
 
 
   private Logger() {
@@ -39,14 +42,15 @@ public class Logger implements MessageReceiver {
   }
 
   public static Logger getInstance(/* Class<?> clazz */ /* String File */) {
-    synchronized (Logger.class) {
-      if (logger == null) {
-        return new Logger(/* File */);
+    if (logger == null) {
+      synchronized (Logger.class) {
+        if (logger == null) {
+          logger = new Logger(/* File */);
+        }
       }
     }
     return logger;
   }
-
 
   /**
    * Save.
@@ -72,11 +76,13 @@ public class Logger implements MessageReceiver {
         file = new File(LOGFOLD + DATEFORMAT.format(new Date()) + "/" + LOGFILE + i + ".txt");
 
         if (!file.exists()) {
-          var e =  file.createNewFile();
+          var e = file.createNewFile();
           break;
         }
       }
-    } else {file = new File(LOGINPUTPATH);}
+    } else {
+      file = new File(LOGINPUTPATH);
+    }
 
     try (FileWriter output = new FileWriter(file, true /* StandardCharsets.UTF_8 */)) {
       LOGS.forEach(data -> {
@@ -87,9 +93,10 @@ public class Logger implements MessageReceiver {
         }
       });
       // output.write(data);
-    } catch (IOException ignored) {}
+    } catch (IOException ignored) {
+      System.out.println("Logger: Error: Unable to save logs.");
+    }
   }
-
 
   public static void addLog(String table) {
     LOG = new Log(table);
@@ -136,5 +143,6 @@ public class Logger implements MessageReceiver {
   public void setType(ReceiverType type) {
 
   }
+
 }
 

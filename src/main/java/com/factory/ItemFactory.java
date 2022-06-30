@@ -7,31 +7,13 @@ import main.java.com.item.supplies.*;
 
 public class ItemFactory {
   
-  public enum ItemType {
-    CATLITTER(CatLitter::new),
-    FOOD(Food::new),
-    LEASH(Leash::new),
-    TOY(Toy::new),
-    TREAT(Treat::new);
-
-    private final ItemBuilder<Supplies, String[]> builder;
-    // private final ItemBuilder<Supplies> builder;
-
-    ItemType(ItemBuilder<Supplies, String[]> builder) {
-      this.builder = builder;
-    }
-
-    private Supplies build(String... fArgs) {
-      return builder.build(fArgs);
-    }
-  }
 
   public static Supplies createItem(ItemType itemType) {
     return build(itemType);
   }
 
   private static Supplies build(ItemType itemType) {
-    return itemType.builder.build();
+    return itemType.build();
   }
 
 

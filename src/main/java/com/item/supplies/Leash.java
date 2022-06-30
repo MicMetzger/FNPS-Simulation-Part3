@@ -1,8 +1,8 @@
 package main.java.com.item.supplies;
 
 import main.java.com.item.*;
+import main.java.com.item.supplies.enums.SupplyType;
 import main.java.com.item.pets.enums.*;
-import main.java.com.item.supplies.enums.*;
 
 
 

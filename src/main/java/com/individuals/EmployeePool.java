@@ -14,5 +14,4 @@ public class EmployeePool extends ObjectPool<Employee, ReceiverType, String> {
       default -> {return null;}
     }
   }
-
 }

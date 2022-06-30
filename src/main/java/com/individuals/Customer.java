@@ -1,10 +1,12 @@
 package main.java.com.individuals;
 
 import static java.lang.Math.round;
+import static main.java.com.utilities.Builders.counter;
 
 import java.security.*;
 import java.util.*;
 import main.java.com.item.*;
+import main.java.com.item.supplies.enums.PurchaseType;
 
 
 
@@ -16,8 +18,12 @@ public class Customer implements Individual, MessageReceiver {
   public boolean discount;
   String name;
   double purchasePrice;
+  int ID;
 
+  
+  
   public Customer() {
+    ID              = counter.incrementAndGet();
     desire        = PurchaseType.values()[new SecureRandom().nextInt(PurchaseType.values().length)];
     obj           = null;
     purchasePrice = 0;
@@ -111,5 +117,11 @@ public class Customer implements Individual, MessageReceiver {
   public void setName(String name) {
 
   }
+
+  @Override
+  public int getID() {
+    return ID;
+  }
+
 
 }

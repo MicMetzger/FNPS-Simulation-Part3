@@ -2,12 +2,12 @@ package main.java.com.item.supplies;
 
 import static java.lang.Math.round;
 import static main.java.com.item.pets.enums.AnimalType.randomAnimal;
-import static main.java.com.utilities.Builders.getThe_Day;
+import static main.java.com.utilities.Builders.get_The_Day;
 
 import java.security.*;
 import main.java.com.item.*;
+import main.java.com.item.supplies.enums.SupplyType;
 import main.java.com.item.pets.enums.*;
-import main.java.com.item.supplies.enums.*;
 
 
 
@@ -51,8 +51,8 @@ public class Treat extends Supplies {
       super.setName("Treat");
       super.setListPrice(round(new SecureRandom().nextDouble(100)));
       super.setPurchasePrice(0);
-      super.setSalePrice(round(new SecureRandom().nextDouble(getListPrice())));
-      super.setDayArrived(getThe_Day());
+      super.setSalePrice(round(new SecureRandom().nextDouble(0, getListPrice())));
+      super.setDayArrived(get_The_Day());
       super.setDaySold(0);
     } else {
       // TODO: Implement this. Check what's not being passed in.

@@ -3,7 +3,6 @@ package main.java.com.individuals;
 
 import static main.java.com.utilities.Builders.NAME_TEMPLATE;
 
-import java.security.*;
 import java.util.*;
 import main.java.com.individuals.training.*;
 import main.java.com.item.*;
@@ -12,9 +11,10 @@ import main.java.com.item.*;
 
 public class Trainer extends Employee {
   private String          name = "";
-  public  TrainerStrategy trainingType;
+  private TrainerStrategy trainingType;
 
 
+  /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constructors ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
   public Trainer(String trainingAlgo) {
     super();
     super.base = this;
@@ -25,36 +25,66 @@ public class Trainer extends Employee {
     int num = new Random().nextInt(NAME_TEMPLATE.size());
     this.name = NAME_TEMPLATE.get(num);
     NAME_TEMPLATE.remove(num);
-    setTrainingType(trainingAlgo);
+    this.trainingType = setTrainingType(trainingAlgo);
   }
 
+  /**
+   * Copy constructor
+   *
+   * @param trainer the trainer to copy.
+   */
   public Trainer(Trainer trainer) {
     super(trainer);
-    this.name = trainer.name;
+    this.name         = trainer.name;
     this.trainingType = trainer.trainingType;
     super.setACTIVE(false);
     super.setState(EmployeeState.IDLE);
     super.setType(ReceiverType.TRAINER);
   }
 
-  public void setTrainingType(String trainingAlgo) {
-    // range of  1 - 3
-    int roll = new SecureRandom().nextInt(3);
+  /**
+   * Trainer String constructor
+   *
+   * @param fArgs the string to parse.
+   */
+  public Trainer(String... fArgs) {
+    super();
+    if (fArgs.length > 2) {
+      this.name         = fArgs[0];
+      this.trainingType = setTrainingType(fArgs[1]);
+    } else {
+      int num = new Random().nextInt(NAME_TEMPLATE.size());
+      this.name = NAME_TEMPLATE.get(num);
+      NAME_TEMPLATE.remove(num);
+    }
+
+    super.setACTIVE(false);
+    super.setState(EmployeeState.IDLE);
+    super.setType(ReceiverType.TRAINER);
+  }
+  /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
+
+  /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Setters ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+  public TrainerStrategy setTrainingType(String trainingAlgo) {
     switch (trainingAlgo) {
       case "Haphazard" -> {
-        this.trainingType = new PositiveReinforcement();
         System.out.println("Positive Reinforcement has been assigned to " + this.name);
+        return new PositiveReinforcement();
       }
       case "Negative" -> {
-        this.trainingType = new NegativeReinforcement();
         System.out.println("Negative Reinforcement has been assigned to " + this.name);
+        return new NegativeReinforcement();
       }
       case "Positive" -> {
-        this.trainingType = new Haphazard();
         System.out.println("Haphazard has been assigned to " + this.name);
+        return new HaphazardReinforcement();
       }
     }
+    return null;
   }
+  /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
 
   public void startTraining() {
     boolean animalExists = false;
@@ -78,7 +108,7 @@ public class Trainer extends Employee {
     return trainingType.training(houseBroken, animal);
   }
 
-  
+
   /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Individual Overrides ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
   @Override
   public String getNameExt() {
@@ -94,4 +124,6 @@ public class Trainer extends Employee {
   public void setName(String name) {
     this.name = name;
   }
+  /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
 }

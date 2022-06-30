@@ -1,7 +1,9 @@
 package main.java.com.item;
 
 import java.util.*;
-import main.java.com.item.supplies.enums.*;
+import main.java.com.item.supplies.enums.SupplyType;
+
+
 
 /** */
 public abstract class Supplies extends Item {

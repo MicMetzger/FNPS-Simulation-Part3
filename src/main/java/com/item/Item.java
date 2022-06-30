@@ -4,11 +4,15 @@ import static java.lang.Math.*;
 
 import java.security.*;
 
-/** */
+
+
+/**
+ *
+ */
 public abstract class Item {
   private String name;
-  private int dayArrived;
-  private int daySold;
+  private int    dayArrived;
+  private int    daySold;
   private double purchasePrice;
   private double listPrice;
   private double salePrice;
@@ -18,12 +22,12 @@ public abstract class Item {
   /**
    * Instantiates a new Item.
    *
-   * @param name the name
-   * @param dayArrived the day arrived
-   * @param daySold the day sold
+   * @param name          the name
+   * @param dayArrived    the day arrived
+   * @param daySold       the day sold
    * @param purchasePrice the purchase price
-   * @param listPrice the list price
-   * @param salePrice the sale price
+   * @param listPrice     the list price
+   * @param salePrice     the sale price
    */
   public Item(
       String name,
@@ -33,16 +37,18 @@ public abstract class Item {
       int dayArrived,
       int daySold,
       boolean isPet) {
-    this.name = name;
-    this.dayArrived = dayArrived;
-    this.daySold = daySold;
+    this.name          = name;
+    this.dayArrived    = dayArrived;
+    this.daySold       = daySold;
     this.purchasePrice = purchasePrice;
-    this.listPrice = listPrice;
-    this.salePrice = salePrice;
-    this.isPet = isPet;
+    this.listPrice     = listPrice;
+    this.salePrice     = salePrice;
+    this.isPet         = isPet;
   }
 
-  /** Default constructor of Item object. */
+  /**
+   * Default constructor of Item object.
+   */
   public Item() {
     double newPurchasePrice = round(new SecureRandom().nextDouble(100));
     setPurchasePrice(newPurchasePrice);
@@ -55,7 +61,7 @@ public abstract class Item {
    * @return the name
    */
   public String getName() {
-    if (name == null) return "[-] ERROR: NAME NOT SET.";
+    if (name == null) {return "[-] ERROR: NAME NOT SET.";}
     return name;
   }
 
@@ -95,6 +101,7 @@ public abstract class Item {
     return listPrice;
   }
 
+  //TODO: TEST THIS METHOD
   /**
    * Sets list price.
    *
@@ -104,6 +111,7 @@ public abstract class Item {
     this.listPrice = listPrice;
   }
 
+  //TODO: TEST THIS METHOD
   /**
    * Gets sale price.
    *
@@ -158,7 +166,7 @@ public abstract class Item {
     this.daySold = daySold;
   }
 
-  public boolean isPet() { return isPet; }
+  public boolean isPet() {return isPet;}
 
   public void setAnimalIdentifier(boolean animal) {
     isPet = animal;
@@ -167,23 +175,24 @@ public abstract class Item {
   public void print() {
     System.out.println(
         "Item{"
-            + "name='"
-            + name
-            + '\''
-            + ", dayArrived="
-            + dayArrived
-            + ", daySold="
-            + daySold
-            + ", purchasePrice="
-            + purchasePrice
-            + ", listPrice="
-            + listPrice
-            + ", salePrice="
-            + salePrice
-            + '}');
+        + "name='"
+        + name
+        + '\''
+        + ", dayArrived="
+        + dayArrived
+        + ", daySold="
+        + daySold
+        + ", purchasePrice="
+        + purchasePrice
+        + ", listPrice="
+        + listPrice
+        + ", salePrice="
+        + salePrice
+        + '}');
   }
 
   public double getCost() {
     return purchasePrice;
   }
+
 }

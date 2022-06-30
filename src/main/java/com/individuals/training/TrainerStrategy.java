@@ -7,6 +7,6 @@ import main.java.com.item.*;
  * Strategy Pattern
  */
 public interface TrainerStrategy {
-
+        
     boolean training(boolean houseBroken, Pet animal);
 }

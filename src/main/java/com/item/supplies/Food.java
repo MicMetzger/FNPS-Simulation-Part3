@@ -4,8 +4,11 @@ import static java.lang.Math.*;
 
 import java.security.*;
 import main.java.com.item.*;
+import main.java.com.item.supplies.enums.FoodType;
+import main.java.com.item.supplies.enums.SupplyType;
 import main.java.com.item.pets.enums.*;
-import main.java.com.item.supplies.enums.*;
+
+
 
 public class Food extends Supplies {
   private int        size;
@@ -29,7 +32,7 @@ public class Food extends Supplies {
   }
 
   public Food() {
-	  super.supplyType = SupplyType.Food;
+    super.supplyType = SupplyType.Food;
   }
 
   public Food(int size, AnimalType animal, FoodType type) {

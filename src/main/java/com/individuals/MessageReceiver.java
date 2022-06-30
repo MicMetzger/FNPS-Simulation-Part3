@@ -1,5 +1,6 @@
 package main.java.com.individuals;
 
+
 public interface MessageReceiver {
   void sendMessage(String message);
 
@@ -8,7 +9,7 @@ public interface MessageReceiver {
   ReceiverType getType();
 
   void setType(ReceiverType type);
-  
+
   enum ReceiverType {
     TRAINER,
     CLERK,
@@ -17,4 +18,5 @@ public interface MessageReceiver {
     Pet,
     Register
   }
+
 }

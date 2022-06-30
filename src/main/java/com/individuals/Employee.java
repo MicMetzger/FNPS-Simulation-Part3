@@ -1,18 +1,18 @@
 package main.java.com.individuals;
 
 import static main.java.com.item.pets.enums.Animal.*;
+import static main.java.com.utilities.Builders.counter;
 
 import java.security.*;
 import java.text.*;
 import java.util.*;
-import java.util.concurrent.atomic.*;
 import main.java.com.events.*;
 import main.java.com.events.task.*;
 import main.java.com.item.*;
+import main.java.com.item.supplies.enums.FoodType;
 import main.java.com.item.pets.*;
 import main.java.com.item.pets.enums.*;
 import main.java.com.item.supplies.*;
-import main.java.com.item.supplies.enums.*;
 import main.java.com.store.*;
 
 
@@ -23,33 +23,31 @@ public class Employee implements Individual, MessageReceiver {
   ArrayList<Item>            inventory;
   ArrayList<Pet>             sick;
   ArrayList<DeliveryPackage> mailBox;
-  protected            Employee      base;
-  private              double        cash;
-  private              double        earning;
-  private              int           sold;
-  private              int           workedDays;
-  private              double        cashWithdrawn;
-  private              EmployeeTask  task;
-  private              EmployeeState state;
-  private              boolean       ACTIVE;
-  private              ReceiverType  type;
-  private static final AtomicInteger counter = new AtomicInteger(0);
-  private final        int           ID;
-
-
+  protected     Employee      base;
+  private       double        cash;
+  private       double        earning;
+  private       int           sold;
+  private       int           workedDays;
+  private       double        cashWithdrawn;
+  private       EmployeeTask  task;
+  private       EmployeeState state;
+  private       boolean       ACTIVE;
+  private       ReceiverType  type;
+  private final int           ID;
 
   public enum EmployeeState {
     IDLE("Idle"),
     OCCUPIED("Occupied"),
     UNAVAILABLE("Unavailable");
 
-    private String name;
+    private final String name;
 
     EmployeeState(String state) {
       this.name = state;
     }
   }
 
+  
 
   /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constructors ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
   public Employee(int workedDays) {
@@ -88,11 +86,11 @@ public class Employee implements Individual, MessageReceiver {
     this.ACTIVE     = employee.ACTIVE;
     this.type       = employee.type;
   }
+  /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
 
   /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Getters ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
   /**
    * Gets the total dollar and cent earning gained from sales closed by this employee.
    *
@@ -138,6 +136,7 @@ public class Employee implements Individual, MessageReceiver {
     return ID;
   }
 
+
   /**
    * Reports if the employee is active and working in a store for the day.
    *
@@ -146,10 +145,11 @@ public class Employee implements Individual, MessageReceiver {
   public boolean isACTIVE() {
     return ACTIVE;
   }
+  /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
 
 
   /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Setters ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
   /**
    * Updates the amount the employee has earned through sales.
    *
@@ -193,6 +193,8 @@ public class Employee implements Individual, MessageReceiver {
   public void setACTIVE(boolean ACTIVE) {
     this.ACTIVE = ACTIVE;
   }
+  /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
 
 
   /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Methods ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */

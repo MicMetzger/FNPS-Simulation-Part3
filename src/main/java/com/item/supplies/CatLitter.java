@@ -1,11 +1,11 @@
 package main.java.com.item.supplies;
 
 import static java.lang.Math.*;
-import static main.java.com.utilities.Builders.getThe_Day;
+import static main.java.com.utilities.Builders.get_The_Day;
 
 import java.security.*;
 import main.java.com.item.*;
-import main.java.com.item.supplies.enums.*;
+import main.java.com.item.supplies.enums.SupplyType;
 
 
 
@@ -23,7 +23,7 @@ public class CatLitter extends Supplies {
    */
   public CatLitter(int size) {
     super();
-    
+
     this.size        = size;
     super.supplyType = SupplyType.CatLitter;
     super.setDayArrived(0);
@@ -31,7 +31,7 @@ public class CatLitter extends Supplies {
     super.setListPrice(round(new SecureRandom().nextDouble(100)));
     super.setPurchasePrice(0);
     super.setSalePrice(round(new SecureRandom().nextDouble(50)));
-    super.setDayArrived(getThe_Day());
+    super.setDayArrived(get_The_Day());
     super.setDaySold(0);
   }
 
@@ -46,8 +46,8 @@ public class CatLitter extends Supplies {
     super.setName("CatLitter");
     super.setListPrice(round(new SecureRandom().nextDouble(100)));
     super.setPurchasePrice(0);
-    super.setSalePrice(round(new SecureRandom().nextDouble(getListPrice())));
-    super.setDayArrived(getThe_Day());
+    super.setSalePrice(round(new SecureRandom().nextDouble(0, getListPrice())));
+    super.setDayArrived(get_The_Day());
     super.setDaySold(0);
   }
 
@@ -78,8 +78,9 @@ public class CatLitter extends Supplies {
       super.setName("CatLitter");
       super.setListPrice(round(new SecureRandom().nextDouble(100)));
       super.setPurchasePrice(0);
-      super.setSalePrice(round(new SecureRandom().nextDouble(getListPrice())));
-      super.setDayArrived(getThe_Day());
+      // TODO: all these values need bounding checks.
+      super.setSalePrice(round(new SecureRandom().nextDouble(0, getListPrice())));
+      super.setDayArrived(get_The_Day());
       super.setDaySold(0);
     } else {
       // TODO: Implement this. Check what's not being passed in.
