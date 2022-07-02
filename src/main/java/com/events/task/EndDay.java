@@ -2,7 +2,6 @@ package main.java.com.events.task;
 
 import static main.java.com.events.EventStatus.*;
 
-import main.java.com.individuals.track.TrackerManager;
 import main.java.com.utilities.Pair;
 import java.util.*;
 import main.java.com.Logging.*;
@@ -32,39 +31,26 @@ public class EndDay implements State {
   }
 
   @Override
-  public void enterState() {
+  public long enterState() {
     this.status = IN_PROGRESS;
 
     employeeLog      = new ArrayList<Employee>(state.getEmployees());
     employeeEarnings = new ArrayList<Pair<Integer, Double>>();
     employeeLog.forEach(employee -> employeeEarnings.add(new Pair<Integer, Double>(employee.getSold(), employee.getEarning())));
-    Logger.LOG(EventLog.tracking(employeeLog, employeeEarnings, state.getDay()));
+    Logger.LOG(EventLog.tracking(employeeLog, employeeEarnings, Store.getDay()));
     // Logger.LOG(EventLog.tracking(employeeLog, employeeEarnings, state.day));
 
     System.out.println("\n##################################################");
     System.out.println("The workday comes to an end...");
-
     // TODO: 4
     // empty register and store cash in Store
     state.updateCash();
-    nextState();
-  }
-
-  @Override
-  public void exitState() {
     this.status = COMPLETE;
-
     System.out.println("##################################################\n");
-    Utilities.gapTime();
-    state.goNewDay();
+    return 0;
   }
-
-  @Override
-  public void nextState() {
 
     // stateMachine.setStoreState(stateMachine.goEndDay());
-    exitState();
-  }
 
   @Override
   public boolean hasTask() {
@@ -72,8 +58,8 @@ public class EndDay implements State {
   }
 
   @Override
-  public EmployeeTask getTask() {
-    return null;
+  public void observe() {
+    
   }
 
   @Override
@@ -83,12 +69,12 @@ public class EndDay implements State {
 
   @Override
   public EventStatus getStatus() {
-    return null;
+    return status;
   }
 
   @Override
-  public EventStatus setStatus(EventStatus status) {
-    return null;
+  public void setStatus(EventStatus status) {
+    this.status = status;
   }
 
   public void update(Object message) {

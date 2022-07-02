@@ -14,7 +14,7 @@ public interface EventObservable {
 
   void notifyReceivers(String message, Object argument);
 
-  void notifyEmployees(String message, Object argument);
+  long notifyEmployees(String message, Object argument);
 
   void notifyCustomers(String message, Object argument);
 

@@ -22,29 +22,20 @@ public class OpenStore implements State {
   }
 
   @Override
-  public void enterState() {
+  public long enterState() {
     this.status = IN_PROGRESS;
 
     System.out.println("\n##################################################");
     state.openStore();
     state.updateCash();
-    nextState();
-  }
-
-  @Override
-  public void exitState() {
     this.status = COMPLETE;
 
     System.out.println("##################################################\n");
     Utilities.gapTime();
-    state.goEnterState();
+    return 0;
   }
+    // state.setStoreState(state.goCleanStore());
 
-  @Override
-  public void nextState() {
-    state.setStoreState(state.goCleanStore());
-    exitState();
-  }
 
   @Override
   public boolean hasTask() {
@@ -52,8 +43,8 @@ public class OpenStore implements State {
   }
 
   @Override
-  public EmployeeTask getTask() {
-    return null;
+  public void observe() {
+    
   }
 
   @Override
@@ -63,12 +54,12 @@ public class OpenStore implements State {
 
   @Override
   public EventStatus getStatus() {
-    return null;
+    return status;
   }
 
   @Override
-  public EventStatus setStatus(EventStatus status) {
-    return null;
+  public void setStatus(EventStatus status) {
+    this.status = status;
   }
 
   public void update(Object message) {

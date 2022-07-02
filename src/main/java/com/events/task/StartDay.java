@@ -30,41 +30,27 @@ public class StartDay implements State {
   }
 
   @Override
-  public void enterState() {
+  public long enterState() throws InterruptedException {
     this.status = IN_PROGRESS;
 
     employees = state.selectStaff();
     pets      = state.getAnimals();
     supplies  = state.getSupplies();
-    
+
     System.out.println("\n#################################################");
     if (!state.checkRegister()) {
       System.out.println("Register cash is low... ");
-      state.setStoreState(state.goVisitBankState());
-      state.goEnterState();
+      new VisitBank(state).enterState();
     } else {
       System.out.println("Cash is sufficient");
     }
 
-    nextState();
-  }
-
-  @Override
-  public void exitState() {
-    this.status = COMPLETE;
     Logger.LOG(EventLog.startDayEvent(employees, employees.size(), pets, pets.size(), supplies, supplies.size()));
     System.out.println("##################################################\n");
     Utilities.gapTime();
-    state.goEnterState();
+    this.status = COMPLETE;
 
-    // TODO: update information and report. Afterwards, call nextState()
-  }
-
-  @Override
-  public void nextState() {
-    // update();
-    state.setStoreState(state.goProcessDelivery());
-    exitState();
+    return 0;
   }
 
   @Override
@@ -73,8 +59,8 @@ public class StartDay implements State {
   }
 
   @Override
-  public EmployeeTask getTask() {
-    return null;
+  public void observe() {
+
   }
 
   @Override
@@ -84,14 +70,15 @@ public class StartDay implements State {
 
   @Override
   public EventStatus getStatus() {
-    return null;
+    return status;
   }
 
   @Override
-  public EventStatus setStatus(EventStatus status) {
-    return null;
+  public void setStatus(EventStatus status) {
+    this.status = status;
   }
 
   public void update(Object message) {
   }
+
 }

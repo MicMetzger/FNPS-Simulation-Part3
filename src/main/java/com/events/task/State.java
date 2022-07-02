@@ -1,25 +1,20 @@
 package main.java.com.events.task;
 
 import main.java.com.events.*;
-import main.java.com.events.task.*;
 import main.java.com.individuals.*;
 
 
 
-public interface State {  
-  void enterState();
-
-  void exitState();
-
-  void nextState();
-
+public interface State {
+  enum StateStatus {
+    INCOMPLETE,
+    IN_PROGRESS,
+    COMPLETE
+  }
+  long enterState() throws InterruptedException;
   boolean hasTask();
-
-  EmployeeTask getTask();
-
+  void observe();
   EmployeeTask getTask(Employee employee);
-
   EventStatus getStatus();
-  
-  EventStatus setStatus(EventStatus status);
+  void setStatus(EventStatus status);
 }

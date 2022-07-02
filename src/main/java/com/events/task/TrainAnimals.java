@@ -20,28 +20,19 @@ public class TrainAnimals implements State {
   }
 
   @Override
-  public void enterState() {
+  public long enterState() {
     this.status = IN_PROGRESS;
 
     System.out.println("\n##################################################");
     ((Trainer) state.currentTrainer).startTraining();
-    nextState();
-  }
-
-  @Override
-  public void exitState() {
     this.status = COMPLETE;
 
     System.out.println("\n##################################################");
     Utilities.gapTime();
-    state.goEnterState();
+    return 0;
   }
+    // state.setStoreState(state.goOpenStore());
 
-  @Override
-  public void nextState() {
-    state.setStoreState(state.goOpenStore());
-    exitState();
-  }
 
   @Override
   public boolean hasTask() {
@@ -49,8 +40,8 @@ public class TrainAnimals implements State {
   }
 
   @Override
-  public EmployeeTask getTask() {
-    return null;
+  public void observe() {
+    
   }
 
   @Override
@@ -60,11 +51,11 @@ public class TrainAnimals implements State {
 
   @Override
   public EventStatus getStatus() {
-    return null;
+    return status;
   }
 
   @Override
-  public EventStatus setStatus(EventStatus status) {
-    return null;
+  public void setStatus(EventStatus status) {
+    this.status = status;
   }
 }

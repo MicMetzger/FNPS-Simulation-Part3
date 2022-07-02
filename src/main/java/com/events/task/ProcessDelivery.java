@@ -22,31 +22,22 @@ public class ProcessDelivery implements State {
   }
 
   @Override
-  public void enterState() {
+  public long enterState() {
     this.status = IN_PROGRESS;
 
     System.out.println("\n##################################################");
     state.currentClerk.processDeliveries();
     state.updateMailBox();
     state.updateInventory();
-    nextState();
-  }
-
-  @Override
-  public void exitState() {
     this.status = COMPLETE;
 
     System.out.println("##################################################\n");
     Utilities.gapTime();
-    state.goEnterState();
+    return 0;
   }
 
-  @Override
-  public void nextState() {
-    System.out.println("The employee returns t finish his other activities.");
-    state.setStoreState(state.goFeedAnimals());
-    exitState();
-  }
+    // state.setStoreState(state.goFeedAnimals());
+
 
   @Override
   public boolean hasTask() {
@@ -54,8 +45,8 @@ public class ProcessDelivery implements State {
   }
 
   @Override
-  public EmployeeTask getTask() {
-    return null;
+  public void observe() {
+    
   }
 
   @Override
@@ -65,12 +56,12 @@ public class ProcessDelivery implements State {
 
   @Override
   public EventStatus getStatus() {
-    return null;
+    return status;
   }
 
   @Override
-  public EventStatus setStatus(EventStatus status) {
-    return null;
+  public void setStatus(EventStatus status) {
+    this.status = status;
   }
 
   public void update(Object message) {

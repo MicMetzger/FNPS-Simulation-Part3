@@ -22,41 +22,27 @@ public class DoInventory implements State {
   }
 
   @Override
-  public void enterState() {
+  public long enterState() {
     this.status = IN_PROGRESS;
-
     System.out.println("\n##################################################");
     state.currentClerk.doInventory();
     state.updateCash();
     state.updateInventory();
-    nextState();
-  }
-
-  @Override
-  public void exitState() {
-    this.status = COMPLETE;
-
     System.out.println("##################################################\n");
     Utilities.gapTime();
-    state.goEnterState();
-
-    // TODO: update information and report. Afterwards, call nextState()
+    this.status = COMPLETE;
+    return 0;
   }
-
-  @Override
-  public void nextState() {
-    state.setStoreState(state.goTrainAnimals());
-    exitState();
-  }
-
+    // state.setStoreState(state.goTrainAnimals());
+  
   @Override
   public boolean hasTask() {
     return false;
   }
 
   @Override
-  public EmployeeTask getTask() {
-    return null;
+  public void observe() {
+    
   }
 
   @Override
@@ -66,12 +52,12 @@ public class DoInventory implements State {
 
   @Override
   public EventStatus getStatus() {
-    return null;
+    return status;
   }
 
   @Override
-  public EventStatus setStatus(EventStatus status) {
-    return null;
+  public void setStatus(EventStatus status) {
+    this.status = status;
   }
 
   public void update(Object message) {

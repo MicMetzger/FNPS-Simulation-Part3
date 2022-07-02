@@ -1,9 +1,10 @@
 package main.java.com.store;
 
+import static main.java.com.events.EventStatus.COMPLETE;
+import static main.java.com.events.EventStatus.INCOMPLETE;
 import static main.java.com.utilities.Builders.*;
 
 import main.java.com.factory.*;
-import main.java.com.factory.ItemFactory.*;
 import java.security.*;
 import java.util.*;
 import main.java.com.Logging.*;
@@ -23,7 +24,7 @@ import main.java.com.item.supplies.*;
 public class Store implements EventObservable {
   public static final Logger logger = Logger.getInstance();
   // private final       Object MONITOR = new Object();
-  static              State  newDay, startDay, endDay, processDelivery, feedAnimals, visitBank, checkRegister, doInventory, trainAnimals, openStore, cleanStore, goEndSimulation, currentState, endState, previousState;
+  State  newDay, startDay, endDay, processDelivery, feedAnimals, visitBank, checkRegister, doInventory, trainAnimals, openStore, cleanStore, endSimulation, currentState, endState, previousState;
   static List<State> states;
 
   // The store's Inventory.
@@ -39,12 +40,15 @@ public class Store implements EventObservable {
   ArrayList<MessageReceiver> employeeReceivers;
   ArrayList<MessageReceiver> receivers;
   ArrayList<MessageReceiver> customerReceivers;
-  public        Employee currentClerk;
-  public        Employee currentTrainer;
+  public Employee currentClerk;
+  public Employee currentTrainer;
+
+  private State state;
+
   // Money + day management
-  private       double   bankWithdrawal;
-  private       double   cash;
-  public static int      day;
+  private       double bankWithdrawal;
+  private       double cash;
+  public static int    day;
 
   // private static final class InstanceHolder {
   //   private static final Store instance = new Store();
@@ -155,7 +159,7 @@ public class Store implements EventObservable {
     cleanStore      = new CleanStore(this);
     trainAnimals    = new TrainAnimals(this);
     openStore       = new OpenStore(this);
-    goEndSimulation = new GoEndSimulation(this);
+    endSimulation = new EndSimulation(this);
 
     states.add(startDay);
     states.add(endDay);
@@ -165,9 +169,15 @@ public class Store implements EventObservable {
     states.add(doInventory);
     states.add(openStore);
     states.add(cleanStore);
-    states.add(goEndSimulation);
+    states.add(endSimulation);
   }
 
+  public void StartSimulation() throws InterruptedException {
+    state = new NewDay(this);
+    state.enterState();
+    timePasses();
+  }
+   
   public ArrayList<State> getStates() {
     return (ArrayList<State>) states;
   }
@@ -219,6 +229,7 @@ public class Store implements EventObservable {
     currentTrainer.setACTIVE(true);
     currentTrainer.setTask(null);
 
+    employeeReceivers = new ArrayList<MessageReceiver>(Arrays.asList(currentClerk, currentTrainer));
     return Arrays.asList(currentClerk, currentTrainer);
   }
 
@@ -433,7 +444,7 @@ public class Store implements EventObservable {
   }
 
   public void resetDay() {
-    this.day = 0;
+    day = 0;
   }
 
   // Temporary method to test the store
@@ -454,25 +465,17 @@ public class Store implements EventObservable {
     currentState  = state;
   }
 
-  public void goNewDay() {
-    currentState = newDay;
-    currentState.enterState();
-  }
 
   public State goStartDay() {
     return startDay;
   }
 
-  public State goProcessDelivery() {
-    return processDelivery;
-  }
 
   public State goCheckRegister() {
     return checkRegister;
   }
 
   public State goVisitBankState() {
-    previousState = currentState;
     return visitBank;
   }
 
@@ -501,16 +504,49 @@ public class Store implements EventObservable {
   }
 
   public void goEndSimulation() {
-    currentState = goEndSimulation;
+    currentState = endSimulation;
   }
 
-  public void goEnterState() {
-    currentState.enterState();
+  public void goEnterState(State state) throws InterruptedException {
+    this.state = state;
+    state.enterState();
   }
 
-  public void timePasses() {
-    day++;
-    System.out.println("\nDay " + day);
+  private void timePasses() throws InterruptedException {
+    do {
+      if (state.getStatus() == COMPLETE) {
+        if (newDay.getClass().equals(state.getClass())) {
+          goEnterState(startDay);
+        } else if (startDay.getClass().equals(state.getClass())) {
+          goEnterState(processDelivery);
+        } else if (processDelivery.getClass().equals(state.getClass())) {
+          goEnterState(doInventory);
+        } else if (doInventory.getClass().equals(state.getClass())) {
+          goEnterState(feedAnimals);
+        } else if (feedAnimals.getClass().equals(state.getClass())) {
+          goEnterState(openStore);
+        } else if (openStore.getClass().equals(state.getClass())) {
+          goEnterState(trainAnimals);
+        } else if (trainAnimals.getClass().equals(state.getClass())) {
+          goEnterState(cleanStore);
+        } else if (cleanStore.getClass().equals(state.getClass())) {
+          goEnterState(endDay);
+        } else if (endDay.getClass().equals(state.getClass())) {
+          goEnterState(newDay);
+        } 
+      } else {
+        if (state.getStatus() == INCOMPLETE) {
+          state.observe();
+        }
+      }
+      // incrementDay();
+    } while (day < 30);
+    goEnterState(new EndSimulation(this));
+
+  }
+
+  public void observe() {
+    this.state.observe();
   }
   /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
@@ -585,11 +621,14 @@ public class Store implements EventObservable {
    * Notify <b>all employee</b> receivers of an event.
    *
    * @param argument the Runnable to run
+   * @return
    */
   @Override
-  public void notifyEmployees(String message, Object argument) {
+  public long notifyEmployees(String message, Object argument) {
     ArrayList<MessageReceiver> receiversLocal;
-
+    // byte                       callback = 0;
+    // callback = Byte.parseByte((""));
+    
     if (receivers != null) {
       synchronized (this) {
         receiversLocal = new ArrayList<MessageReceiver>(employeeReceivers);
@@ -598,6 +637,8 @@ public class Store implements EventObservable {
         receiver.update(message, argument);
       }
     }
+    // return callback;
+    return 0;
   }
 
   /**

@@ -10,7 +10,7 @@ import main.java.com.store.*;
 
 
 
-public class VisitBank implements State {
+public class VisitBank implements State, Runnable {
   Store        storeState;
   EventStatus  status;
   EmployeeTask task;
@@ -21,12 +21,26 @@ public class VisitBank implements State {
   }
 
   /**
+   * When an object implementing interface {@code Runnable} is used to create a thread, starting the thread causes the object's {@code run} method to be
+   * called in that separately executing thread.
+   * <p>
+   * The general contract of the method {@code run} is that it may take any action whatsoever.
+   *
+   * @see Thread#run()
+   */
+  @Override
+  public void run() {
+    
+  }
+
+  /**
    * The type Banking.
    */
   class Banking extends EmployeeTask implements State {
     double   amount;
     double   cash;
     Employee employee;
+    EventStatus status;
 
 
     Banking(Employee employee, Store store, VisitBank visitBank) {
@@ -61,21 +75,13 @@ public class VisitBank implements State {
       super.getStatus().setAssigned(false);
       getEmployee().setTask(null);
       getEmployee().setState(EmployeeState.IDLE);
+      notify();
     }
 
     @Override
-    public void enterState() {
+    public long enterState() {
 
-    }
-
-    @Override
-    public void exitState() {
-
-    }
-
-    @Override
-    public void nextState() {
-
+      return 0;
     }
 
     @Override
@@ -84,8 +90,8 @@ public class VisitBank implements State {
     }
 
     @Override
-    public EmployeeTask getTask() {
-      return null;
+    public void observe() {
+      
     }
 
     @Override
@@ -94,35 +100,29 @@ public class VisitBank implements State {
     }
 
     @Override
-    public EventStatus setStatus(EventStatus status) {
-      return null;
+    public void setStatus(EventStatus status) {
+      this.status = status;
     }
 
   }
 
   @Override
-  public void enterState() {
+  public long enterState() throws InterruptedException {
     storeState.notifyEmployees("VisitBank", task);
-    exitState();
-  }
-
-  @Override
-  public void exitState() {}
-
-  @Override
-  public void nextState() {
-
+  
+    return 0;
   }
 
   @Override
   public boolean hasTask() {
-    return true;
+    return false;
   }
 
   @Override
-  public EmployeeTask getTask() {
-    return task = new Banking(null, storeState, this);
+  public void observe() {
+
   }
+
 
   public EmployeeTask getTask(Employee employee) {
     return task = new Banking(employee, storeState, this);
@@ -134,9 +134,9 @@ public class VisitBank implements State {
   }
 
   @Override
-  public EventStatus setStatus(EventStatus status) {
+  public void setStatus(EventStatus status) {
     this.status = status;
-    return status;
   }
+
 
 }

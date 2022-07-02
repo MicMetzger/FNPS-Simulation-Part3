@@ -22,29 +22,18 @@ public class CleanStore implements State {
   }
 
   @Override
-  public void enterState() {
+  public long enterState() throws InterruptedException {
     this.status = IN_PROGRESS;
 
     System.out.println("\n##################################################");
     state.currentClerk.cleanStore();
-    nextState();
-  }
-
-  @Override
-  public void exitState() {
-    this.status = COMPLETE;
-
-    System.out.println("##################################################\n");
-    Utilities.gapTime();
-    state.setStoreState(state.goEndDay());
-    state.goEnterState();
-  }
-
-  @Override
-  public void nextState() {
     state.updateInventory();
     state.updateSickAnimal();
-    exitState();
+    System.out.println("##################################################\n");
+    this.status = COMPLETE;
+    // state.goEnterState(new EndDay(state));
+    Utilities.gapTime();
+    return 0;
   }
 
   @Override
@@ -53,8 +42,8 @@ public class CleanStore implements State {
   }
 
   @Override
-  public EmployeeTask getTask() {
-    return null;
+  public void observe() {
+    
   }
 
   @Override
@@ -64,12 +53,12 @@ public class CleanStore implements State {
 
   @Override
   public EventStatus getStatus() {
-    return null;
+    return status;
   }
 
   @Override
-  public EventStatus setStatus(EventStatus status) {
-    return null;
+  public void setStatus(EventStatus status) {
+    this.status = status;
   }
 
   public void update(Object message) {
