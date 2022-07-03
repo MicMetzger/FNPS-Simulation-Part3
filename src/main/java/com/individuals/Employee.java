@@ -57,7 +57,7 @@ public class Employee implements Individual, MessageReceiver {
   /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constructors ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
   public Employee(int workedDays) {
     ID              = counter.incrementAndGet();
-    logger          = LoggerManager.getInstance().getLogger(this.getClass().getCanonicalName());
+    logger          = LoggerManager.getInstance().getLogger(this);
     this.workedDays = workedDays;
     inventory       = new ArrayList<>();
     cash            = 0;
@@ -71,7 +71,7 @@ public class Employee implements Individual, MessageReceiver {
 
   public Employee() {
     ID         = counter.incrementAndGet();
-    logger          = LoggerManager.getInstance().getLogger(this.getClass().getName());
+    logger          = LoggerManager.getInstance().getLogger(this);
     workedDays = 0;
     inventory  = new ArrayList<>();
     cash       = 0;
@@ -85,7 +85,7 @@ public class Employee implements Individual, MessageReceiver {
 
   public Employee(Employee employee) {
     ID              = counter.incrementAndGet();
-    logger          = LoggerManager.getInstance().getLogger(this.getClass().getName());
+    logger          = LoggerManager.getInstance().getLogger(this);
     this.workedDays = employee.workedDays;
     this.inventory  = employee.inventory;
     this.cash       = employee.cash;

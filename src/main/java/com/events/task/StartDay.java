@@ -29,7 +29,7 @@ public class StartDay implements State {
   public StartDay(Store store) {
     this.state  = store;
     this.status = INCOMPLETE;
-    this.logger = LoggerManager.getInstance().getLogger(this.getClass());
+    this.logger = LoggerManager.getInstance().getLogger(this);
   }
 
   @Override

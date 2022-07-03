@@ -23,7 +23,7 @@ public class CleanStore implements State {
   public CleanStore(Store store) {
     this.state  = store;
     this.status = INCOMPLETE;
-    logger          = LoggerManager.getInstance().getLogger(this.getClass().getCanonicalName());
+    logger          = LoggerManager.getInstance().getLogger(this);
   }
 
 

@@ -19,6 +19,7 @@ public abstract class ParallelBase extends RunStateManager {
     super();
     ID_TAG = ID++;
     STORE_THREAD_NAME = "PetStore-" + ID_TAG;
+    logger = LoggerManager.getInstance().getLogger(STORE_THREAD_NAME);
   }
   
   public ParallelBase(String name) {

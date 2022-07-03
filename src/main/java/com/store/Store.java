@@ -71,7 +71,7 @@ public class Store implements EventObservable {
    * <p>Default constructor
    */
   public Store() {
-    logger          = LoggerManager.getInstance().getLogger(this.getClass().getCanonicalName());
+    logger          = LoggerManager.getInstance().getLogger(this);
 
     clerks         = new ArrayList<Employee>();
     trainers       = new ArrayList<Employee>();
