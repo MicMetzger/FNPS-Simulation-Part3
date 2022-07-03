@@ -34,7 +34,7 @@ public class OpenStore implements State {
     Utilities.gapTime();
     return 0;
   }
-    // state.setStoreState(state.goCleanStore());
+  // state.setStoreState(state.goCleanStore());
 
 
   @Override
@@ -44,7 +44,7 @@ public class OpenStore implements State {
 
   @Override
   public void observe() {
-    
+
   }
 
   @Override
@@ -63,5 +63,7 @@ public class OpenStore implements State {
   }
 
   public void update(Object message) {
+
   }
+
 }

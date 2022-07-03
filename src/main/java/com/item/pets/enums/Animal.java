@@ -4,6 +4,7 @@ package main.java.com.item.pets.enums;
 import java.util.*;
 
 
+
 public enum Animal implements AnimalInterface {
   Bulldog(AnimalType.Dog, Breed.Bulldog),
   Poodle(AnimalType.Dog, Breed.Poodle),

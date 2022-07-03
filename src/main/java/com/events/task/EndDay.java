@@ -2,6 +2,8 @@ package main.java.com.events.task;
 
 import static main.java.com.events.EventStatus.*;
 
+import main.java.com.Logging.LoggerManager.ILogger;
+import main.java.com.Logging.LoggerManager.Logger;
 import main.java.com.utilities.Pair;
 import java.util.*;
 import main.java.com.Logging.*;
@@ -24,10 +26,13 @@ public class EndDay implements State {
   int                         Day;
   List<Employee>              employeeLog;
   List<Pair<Integer, Double>> employeeEarnings;
+  Logger                      logger;
   
   public EndDay(Store store) {
     this.state  = store;
     this.status = INCOMPLETE;
+    logger          = LoggerManager.getInstance().getLogger(this);
+
   }
 
   @Override
@@ -37,7 +42,7 @@ public class EndDay implements State {
     employeeLog      = new ArrayList<Employee>(state.getEmployees());
     employeeEarnings = new ArrayList<Pair<Integer, Double>>();
     employeeLog.forEach(employee -> employeeEarnings.add(new Pair<Integer, Double>(employee.getSold(), employee.getEarning())));
-    Logger.LOG(EventLog.tracking(employeeLog, employeeEarnings, Store.getDay()));
+    logger.info(EventLog.tracking(employeeLog, employeeEarnings, Store.getDay()));
     // Logger.LOG(EventLog.tracking(employeeLog, employeeEarnings, state.day));
 
     System.out.println("\n##################################################");

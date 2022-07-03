@@ -3,6 +3,7 @@ package main.java.com.events.task;
 import static main.java.com.events.EventStatus.*;
 
 import java.util.*;
+import java.util.logging.Logger;
 import main.java.com.Logging.*;
 import main.java.com.events.*;
 import main.java.com.individuals.*;
@@ -13,14 +14,13 @@ import main.java.com.utilities.*;
 
 public class NewDay implements State {
   Store                       state;
-  EventStatus                 status;
-  
+  EventStatus status;
+  Logger      logger;
   
 
   public NewDay(Store store) {
     this.state  = store;
     this.status = INCOMPLETE;
-    Logger.addLog("New Simulation\n" + new Date() + "\n\n");
   }
 
   @Override
@@ -33,8 +33,8 @@ public class NewDay implements State {
     //   state.goEndSimulation();
     //   exitState();
     // }
-    System.out.println("Day: " + state.getDay());
-    Logger.LOG(EventLog.newDayEvent(state.getDay()));
+    System.out.println("Day: " + Store.getDay());
+    // logger.info(EventLog.newDayEvent(Store.getDay()).toString());
     this.status = COMPLETE;
     System.out.println("**************************************************\n");
     Utilities.gapTime();

@@ -3,7 +3,9 @@ package main.java.com.store;
 import static main.java.com.events.EventStatus.COMPLETE;
 import static main.java.com.events.EventStatus.INCOMPLETE;
 import static main.java.com.utilities.Builders.*;
+import static main.java.com.utilities.RandomItemType.randomItemType;
 
+import main.java.com.Logging.LoggerManager.Logger;
 import main.java.com.factory.*;
 import java.security.*;
 import java.util.*;
@@ -22,9 +24,9 @@ import main.java.com.item.supplies.*;
 
 
 public class Store implements EventObservable {
-  public static final Logger logger = Logger.getInstance();
+  private Logger logger;
   // private final       Object MONITOR = new Object();
-  State  newDay, startDay, endDay, processDelivery, feedAnimals, visitBank, checkRegister, doInventory, trainAnimals, openStore, cleanStore, endSimulation, currentState, endState, previousState;
+  State newDay, startDay, endDay, processDelivery, feedAnimals, visitBank, checkRegister, doInventory, trainAnimals, openStore, cleanStore, endSimulation, currentState, endState, previousState;
   static List<State> states;
 
   // The store's Inventory.
@@ -62,12 +64,15 @@ public class Store implements EventObservable {
 
   /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constructors ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+
   /**
    * Instantiates a new Store. Main entry point.
    *
    * <p>Default constructor
    */
   public Store() {
+    logger          = LoggerManager.getInstance().getLogger(this.getClass().getCanonicalName());
+
     clerks         = new ArrayList<Employee>();
     trainers       = new ArrayList<Employee>();
     customers      = new ArrayList<Customer>();
@@ -108,6 +113,7 @@ public class Store implements EventObservable {
     trainers.add(pool.createObject(ReceiverType.TRAINER, "Positive"));
   }
 
+
   public void initiateAnimals() {
     // (size, color, broken, purebred) / (breed, age, health)
     inventory.add(new Dog(Double.parseDouble(sizeFormat.format(new Random().nextDouble(50.0))),
@@ -132,6 +138,7 @@ public class Store implements EventObservable {
     inventory.add(new Snake(Double.parseDouble(sizeFormat.format(new SecureRandom().nextDouble(8)))));
   }
 
+
   public void initiateSupplies() {
     inventory.add(new Food(new Random().nextInt(100), randomAnimalType(), randomFoodType()));
     inventory.add(new CatLitter(randomSizeINT(0, 100)));
@@ -147,6 +154,7 @@ public class Store implements EventObservable {
     inventory.add(ItemFactory.createItem(randomItemType()));
   }
 
+
   public void initStates() {
     states          = Collections.synchronizedList(new ArrayList<State>());
     newDay          = new NewDay(this);
@@ -159,7 +167,7 @@ public class Store implements EventObservable {
     cleanStore      = new CleanStore(this);
     trainAnimals    = new TrainAnimals(this);
     openStore       = new OpenStore(this);
-    endSimulation = new EndSimulation(this);
+    endSimulation   = new EndSimulation(this);
 
     states.add(startDay);
     states.add(endDay);
@@ -172,15 +180,18 @@ public class Store implements EventObservable {
     states.add(endSimulation);
   }
 
+
   public void StartSimulation() throws InterruptedException {
     state = new NewDay(this);
     state.enterState();
     timePasses();
   }
-   
+
+
   public ArrayList<State> getStates() {
     return (ArrayList<State>) states;
   }
+
 
   Employee pickAvailableStaff(ArrayList<Employee> staffList) {
     SecureRandom rand   = new SecureRandom();
@@ -195,13 +206,15 @@ public class Store implements EventObservable {
         System.out.println(potentialStaff.getNameExt() + " is feeling sick today. Selecting another staff...");
         return pickAvailableStaff(staffList);
       }
+
       /* Passing store info to the staff */
       potentialStaff.setInventory(this.inventory);
       potentialStaff.setSickPet(this.sick);
       potentialStaff.setMailBox(this.mailBox);
       potentialStaff.setCash(this.cash);
       potentialStaff.incWorkDays();
-      potentialStaff.arrival();
+      potentialStaff.arriveAtStore();
+
       // update work days of the staffs
       for (Employee staff : staffList) {
         if (staff != potentialStaff) {
@@ -216,6 +229,7 @@ public class Store implements EventObservable {
       return pickAvailableStaff(staffList);
     }
   }
+
 
   /**
    * Select staff to man store for this day.
@@ -233,6 +247,7 @@ public class Store implements EventObservable {
     return Arrays.asList(currentClerk, currentTrainer);
   }
 
+
   /* Reference: http://en.wikipedia.org/wiki/Poisson_distribution#Generating_Poisson-distributed_random_variables */
   public int getPoissonValue(double mean) {
     SecureRandom r = new SecureRandom();
@@ -245,6 +260,7 @@ public class Store implements EventObservable {
     } while (p > L);
     return k - 1;
   }
+
 
   public double addOnsHelper(ArrayList<String> addOns, int quantity, Item baseItem) {
     if (quantity < 0) {
@@ -261,14 +277,17 @@ public class Store implements EventObservable {
 
   }
 
+
   public double addRandomAddons(Item item) {
     ArrayList<String> addOns = new ArrayList<String>(Arrays.asList("Insurance", "Vet", "Microchip"));
     Collections.shuffle(addOns);
     return addOnsHelper(addOns, new SecureRandom().nextInt(3), item);
   }
 
+
   public void openStore() {
-    String print = "";
+    double saleprice = 0;
+    String print     = "";
     // Poisson distribution
     int count = attractCustomers(getPoissonValue(3.0));
     print = currentClerk.getNameExt() + " opens the store. \nCurrent inventory: " + inventory.size() + " item(s)\nRegister: " + cash;
@@ -277,7 +296,7 @@ public class Store implements EventObservable {
     print = (count + " potential customers enter the store...");
     System.out.println(print);
 
-    customers.forEach(customer -> {
+    for (Customer customer : customers) {
       boolean selecting = customer.inspectInventory(inventory);
       if (selecting) {
         inventory.remove(customer.obj);
@@ -287,7 +306,7 @@ public class Store implements EventObservable {
                                                                                                                                 : ""));
         if (customer.obj.isPet()) {
           double total = addRandomAddons(customer.obj);
-          cash += total;
+          saleprice += total;
           System.out.println(" ++ $" + total);
         } else {
           System.out.println(" ++ $" + customer.getPurchasePrice());
@@ -303,10 +322,13 @@ public class Store implements EventObservable {
           throw new RuntimeException(e);
         }
       }
-    });
-    currentClerk.setCash(cash);
+    }
+    currentClerk.earn(saleprice);
+    cash += saleprice;
+
     System.out.println("\nCurrent inventory: " + inventory.size() + " item(s)\nCash: " + cash);
   }
+
 
   private int attractCustomers(int count) {
     customers.clear();
@@ -317,17 +339,21 @@ public class Store implements EventObservable {
     return count;
   }
 
+
   public void updateInventory() {
     this.inventory = currentClerk.getInventory();
   }
+
 
   public void updateSickAnimal() {
     this.sick = currentClerk.getSickAnimal();
   }
 
+
   public void updateMailBox() {
     this.mailBox = currentClerk.getMailBox();
   }
+
 
   public void updateCash() {
     this.cash = currentClerk.getCash();
@@ -338,6 +364,7 @@ public class Store implements EventObservable {
 
   /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Getters ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+
   /**
    * the mailbox
    *
@@ -346,6 +373,7 @@ public class Store implements EventObservable {
   public ArrayList<DeliveryPackage> getMailbox() {
     return this.mailBox;
   }
+
 
   public List<Pet> getAnimals() {
     List<Pet> list = new ArrayList<Pet>();
@@ -357,6 +385,7 @@ public class Store implements EventObservable {
     return list;
   }
 
+
   public List<Supplies> getSupplies() {
     List<Supplies> list = new ArrayList<Supplies>();
     inventory.forEach(item -> {
@@ -367,6 +396,7 @@ public class Store implements EventObservable {
     return list;
   }
 
+
   public List<Employee> getEmployees() {
     List<Employee> list = new ArrayList<Employee>();
     list.addAll(clerks);
@@ -374,39 +404,48 @@ public class Store implements EventObservable {
     return list;
   }
 
+
   public double getCash() {
     return cash;
 
   }
 
+
   public double getBankWithdrawal() {
     return bankWithdrawal;
   }
+
 
   public boolean checkRegister() {
     currentClerk.checkRegister();
     return this.getCash() > 200;
   }
 
+
   public ArrayList<Item> getInventory() {
     return inventory;
   }
+
 
   public ArrayList<Pet> getSick() {
     return sick;
   }
 
+
   public ArrayList<Item> getSoldItems() {
     return this.soldItems;
   }
+
 
   public ArrayList<Customer> getCustomers() {
     return customers;
   }
 
+
   public static int getDay() {
     return day;
   }
+
 
   public Customer getCustomer(int ID) {
     for (Customer c : customers) {
@@ -426,6 +465,7 @@ public class Store implements EventObservable {
     return value;
   }
 
+
   private void addWithdrawal(double value) {
     System.out.println("$" + value + " was withdrawn from the bank.\n");
     cash += currentClerk.getCash();
@@ -433,6 +473,7 @@ public class Store implements EventObservable {
     System.out.println("Total withdrawal: " + bankWithdrawal);
     System.out.println("Total cash: " + cash);
   }
+
 
   public void addCash(double cash) {
     this.cash = Double.parseDouble(sizeFormat.format(this.cash += cash));
@@ -443,14 +484,17 @@ public class Store implements EventObservable {
     }
   }
 
+
   public void resetDay() {
     day = 0;
   }
+
 
   // Temporary method to test the store
   public static void incrementDay() {
     day++;
   }
+
 
   public void closeStore() {
     System.out.println(currentClerk.getNameExt() + " closes the store. \nCurrent inventory: " + inventory.size() + " item(s)\nRegister: " + cash);
@@ -475,42 +519,52 @@ public class Store implements EventObservable {
     return checkRegister;
   }
 
+
   public State goVisitBankState() {
     return visitBank;
   }
+
 
   public State goFeedAnimals() {
     return feedAnimals;
   }
 
+
   public State goDoInventory() {
     return doInventory;
   }
+
 
   public State goTrainAnimals() {
     return trainAnimals;
   }
 
+
   public State goOpenStore() {
     return openStore;
   }
+
 
   public State goCleanStore() {
     return cleanStore;
   }
 
+
   public State goEndDay() {
     return endDay;
   }
+
 
   public void goEndSimulation() {
     currentState = endSimulation;
   }
 
+
   public void goEnterState(State state) throws InterruptedException {
     this.state = state;
     state.enterState();
   }
+
 
   private void timePasses() throws InterruptedException {
     do {
@@ -533,7 +587,7 @@ public class Store implements EventObservable {
           goEnterState(endDay);
         } else if (endDay.getClass().equals(state.getClass())) {
           goEnterState(newDay);
-        } 
+        }
       } else {
         if (state.getStatus() == INCOMPLETE) {
           state.observe();
@@ -545,6 +599,7 @@ public class Store implements EventObservable {
 
   }
 
+
   public void observe() {
     this.state.observe();
   }
@@ -553,6 +608,7 @@ public class Store implements EventObservable {
 
 
   /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Receiver Overrides ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
 
   /**
    * Add Receiver.
@@ -598,6 +654,7 @@ public class Store implements EventObservable {
 
   }
 
+
   /**
    * Notify <b>all</b> receivers of an event.
    *
@@ -617,6 +674,7 @@ public class Store implements EventObservable {
     }
   }
 
+
   /**
    * Notify <b>all employee</b> receivers of an event.
    *
@@ -628,7 +686,7 @@ public class Store implements EventObservable {
     ArrayList<MessageReceiver> receiversLocal;
     // byte                       callback = 0;
     // callback = Byte.parseByte((""));
-    
+
     if (receivers != null) {
       synchronized (this) {
         receiversLocal = new ArrayList<MessageReceiver>(employeeReceivers);
@@ -640,6 +698,7 @@ public class Store implements EventObservable {
     // return callback;
     return 0;
   }
+
 
   /**
    * Notify <b>all customer</b> receivers of an event.

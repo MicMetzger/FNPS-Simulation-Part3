@@ -4,6 +4,7 @@ import static main.java.com.events.EventStatus.*;
 
 import java.util.*;
 import main.java.com.Logging.*;
+import main.java.com.Logging.LoggerManager.Logger;
 import main.java.com.events.*;
 import main.java.com.individuals.*;
 import main.java.com.item.*;
@@ -23,10 +24,12 @@ public class StartDay implements State {
   List<Employee> employees;
   List<Pet>      pets;
   List<Supplies> supplies;
+  Logger         logger;
 
   public StartDay(Store store) {
     this.state  = store;
     this.status = INCOMPLETE;
+    this.logger = LoggerManager.getInstance().getLogger(this.getClass());
   }
 
   @Override
@@ -45,7 +48,7 @@ public class StartDay implements State {
       System.out.println("Cash is sufficient");
     }
 
-    Logger.LOG(EventLog.startDayEvent(employees, employees.size(), pets, pets.size(), supplies, supplies.size()));
+    logger.info(EventLog.startDayEvent(employees, employees.size(), pets, pets.size(), supplies, supplies.size()));
     System.out.println("##################################################\n");
     Utilities.gapTime();
     this.status = COMPLETE;

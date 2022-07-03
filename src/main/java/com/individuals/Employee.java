@@ -6,6 +6,8 @@ import static main.java.com.utilities.Builders.counter;
 import java.security.*;
 import java.text.*;
 import java.util.*;
+import main.java.com.Logging.LoggerManager;
+import main.java.com.Logging.LoggerManager.Logger;
 import main.java.com.events.*;
 import main.java.com.events.task.*;
 import main.java.com.item.*;
@@ -33,7 +35,10 @@ public class Employee implements Individual, MessageReceiver {
   private       EmployeeState state;
   private       boolean       ACTIVE;
   private       ReceiverType  type;
-  private final int           ID;
+  private final int    ID;
+  private       Logger logger;
+
+
 
   public enum EmployeeState {
     IDLE("Idle"),
@@ -42,16 +47,17 @@ public class Employee implements Individual, MessageReceiver {
 
     private final String name;
 
+
     EmployeeState(String state) {
       this.name = state;
     }
   }
 
-  
 
   /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constructors ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
   public Employee(int workedDays) {
     ID              = counter.incrementAndGet();
+    logger          = LoggerManager.getInstance().getLogger(this.getClass().getCanonicalName());
     this.workedDays = workedDays;
     inventory       = new ArrayList<>();
     cash            = 0;
@@ -62,8 +68,10 @@ public class Employee implements Individual, MessageReceiver {
     ACTIVE          = false;
   }
 
+
   public Employee() {
     ID         = counter.incrementAndGet();
+    logger          = LoggerManager.getInstance().getLogger(this.getClass().getName());
     workedDays = 0;
     inventory  = new ArrayList<>();
     cash       = 0;
@@ -74,8 +82,10 @@ public class Employee implements Individual, MessageReceiver {
     ACTIVE     = false;
   }
 
+
   public Employee(Employee employee) {
     ID              = counter.incrementAndGet();
+    logger          = LoggerManager.getInstance().getLogger(this.getClass().getName());
     this.workedDays = employee.workedDays;
     this.inventory  = employee.inventory;
     this.cash       = employee.cash;
@@ -90,7 +100,11 @@ public class Employee implements Individual, MessageReceiver {
 
 
 
-  /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Getters ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+  /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
+                            Getters 
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
+
   /**
    * Gets the total dollar and cent earning gained from sales closed by this employee.
    *
@@ -99,6 +113,7 @@ public class Employee implements Individual, MessageReceiver {
   public double getEarning() {
     return earning;
   }
+
 
   /**
    * Gets the total number of items sold by this specific employee.
@@ -109,6 +124,7 @@ public class Employee implements Individual, MessageReceiver {
     return sold;
   }
 
+
   /**
    * Gets the employee's state.
    *
@@ -118,6 +134,7 @@ public class Employee implements Individual, MessageReceiver {
     return state;
   }
 
+
   /**
    * Gets the current event task assigned to this employee if one exists.
    *
@@ -126,6 +143,7 @@ public class Employee implements Individual, MessageReceiver {
   public EmployeeTask getTask() {
     return task;
   }
+
 
   /**
    * Gets employee ID.
@@ -149,7 +167,11 @@ public class Employee implements Individual, MessageReceiver {
 
 
 
-  /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Setters ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+  /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
+                            Setters 
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
+
   /**
    * Updates the amount the employee has earned through sales.
    *
@@ -169,6 +191,7 @@ public class Employee implements Individual, MessageReceiver {
     this.state = state;
   }
 
+
   /**
    * Registers a task to the employee.
    *
@@ -177,6 +200,7 @@ public class Employee implements Individual, MessageReceiver {
   public void setTask(EmployeeTask task) {
     this.task = task;
   }
+
 
   /**
    * Sets the MessageReceiver Individual object type.
@@ -187,79 +211,47 @@ public class Employee implements Individual, MessageReceiver {
     this.type = trainer;
   }
 
+
   /**
    * @param ACTIVE the aCTIVE to set
    */
   public void setACTIVE(boolean ACTIVE) {
     this.ACTIVE = ACTIVE;
   }
-  /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+  /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-
-  /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Methods ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+  /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
+                            Methods 
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
   private void upSold() {
     this.sold++;
   }
 
+
   public void announce(String announcement) {
-    System.out.println(getNameExt() + announcement);
+    logger.info(getNameExt() + announcement);
   }
 
-  public void arrival() {
+
+  public void arriveAtStore() {
     String announcement = " enters the store...";
     announce(announcement);
   }
 
-  private void leave() {
+
+  private void leaveTheStore() {
     String announcement = " leaves the store...";
     announce(announcement);
   }
+
 
   public void checkRegister() {
     String announcement = " checks the register...";
     announce(announcement);
   }
 
-  public void feedAnimals() {
-    String announcement = " goes to feed the animals...";
-    announce(announcement);
-    ArrayList<Item> itemsToBeRemoved = new ArrayList<>();
-    inventory.forEach(item -> {
-      // TODO: this evaluation seems to fail, may be an issue when purchasing animals and initializing
-      if (item.isPet()) {
-        // 5% chance of getting sick
-        /* = ((Pet) item).setHealthy(rand.nextInt(0,100) < 5);*/
-        boolean getsSick = new SecureRandom().nextInt(100) < 5;
-        if (getsSick) {
-          ((Pet) item).setHealthy(false);
-          announce(" visits a " /*+ ((Pet) item).getBreed().name + " "*/ + ((Pet) item).getClass().getSimpleName() + ", and the pet got sick...");
-          sick.add(((Pet) item));
-          itemsToBeRemoved.add(item); // preventing error
-        } else {
-          announce(" visits a " /*+ ((Pet) item).getBreed().name + " "*/ + ((Pet) item).getClass().getSimpleName());
-          announce(" feeds the " /*+ ((Pet) item).getBreed().name + " "*/ + ((Pet) item).getClass().getSimpleName());
-        }
-      }
-    });
-    inventory.removeAll(itemsToBeRemoved);
-    itemsToBeRemoved.clear();
-
-    for (Pet pet : sick) {
-      // 25% change of recovering
-      switch (pet.setHealthy(new SecureRandom().nextInt(100) < 25)) {
-        case 0 -> announce(
-            " feeds a sick " /*+ ((Pet) item).getBreed().name + " "*/ + pet.getClass().getSimpleName() + " and the pet remains ill...");
-        case 1 -> {
-          announce(" feeds a sick " /*+ ((Pet) item).getBreed().name + " "*/ + pet.getClass().getSimpleName()
-                   + " and the pet recovered from its sickness...");
-          inventory.add(pet);
-          itemsToBeRemoved.add(pet); // preventing error
-        }
-      }
-    }
-    sick.removeAll(itemsToBeRemoved);
-  }
 
   public double goToBank(double cashWithdrawal) {
     if (cashWithdrawal <= 0) {cashWithdrawal = 1000;}
@@ -272,6 +264,7 @@ public class Employee implements Individual, MessageReceiver {
 
   }
 
+
   public double goToBank() {
     String announcement = " goes to the bank, and withdraws $1000.00";
     announce(announcement);
@@ -280,6 +273,7 @@ public class Employee implements Individual, MessageReceiver {
     cashWithdrawn += 1000;
     return cashWithdrawn;
   }
+
 
   public void processDeliveries() {
     String announcement = " goes through today's deliveries...";
@@ -300,14 +294,96 @@ public class Employee implements Individual, MessageReceiver {
       String announcementError = " notices that the mailbox is empty!";
       announce(announcementError);
     }
+  }
 
+
+  public void doInventory() {
+    // String announcement = "places an order for ";  //TODO\
+
+    Random            rand            = new Random();
+    ArrayList<String> itemToBeRemoved = new ArrayList<String>();
+    ArrayList<String> ITEM_TO_ORDER = new ArrayList<String>(
+        Arrays.asList("Dog", "Cat", "Bird", "Food", "Leash", "CatLitter", "Snake", "Ferret", "Treat"));
+    String announcement        = " checking the inventory...";
+    double totalInventoryValue = 0.0;
+
+    announce(announcement);
+    for (Item item : inventory) {
+      // Initially (Day one), the value should be all zero as all purchase prices should be zero.
+      totalInventoryValue += item.getPurchasePrice();
+      String itemName = item.getClass().getSimpleName();
+      if (ITEM_TO_ORDER.contains(itemName)) {
+        itemToBeRemoved.add(itemName);
+      }
+    }
+
+    announce(" reporting the total inventory value. Total Value: $" + totalInventoryValue);
+    ITEM_TO_ORDER.removeAll(itemToBeRemoved);
+    itemToBeRemoved.clear();
+
+    // ITEM_TO_ORDER is now left with items that need to be ordered (0 stock)
+    for (String name : ITEM_TO_ORDER) {
+      announce(" notices " + name + " needs to be purchased.");
+      int    expectedDeliveryDate = workedDays + rand.nextInt(3);
+      double purchasePrice        = rand.nextInt(100);
+      if (cash >= purchasePrice) {
+        mailBox.add(orderItem(name, expectedDeliveryDate, purchasePrice));
+        cash -= purchasePrice;
+      } else {
+        // insufficient money
+        announce("Purchase failed: Insufficient money");
+        itemToBeRemoved.add(name);
+      }
+    }
+    ITEM_TO_ORDER.clear();
+  }
+
+
+  public void feedAnimals() {
+    String announcement = " goes to feed the animals...";
+    announce(announcement);
+    ArrayList<Item> itemsToBeRemoved = new ArrayList<>();
+    inventory.forEach(item -> {
+      // TODO: this evaluation seems to fail, may be an issue when purchasing animals and initializing
+      if (item.isPet()) {
+        // 5% chance of getting sick
+        /* = ((Pet) item).setHealthy(rand.nextInt(0,100) < 5);*/
+        boolean getsSick = new SecureRandom().nextInt(100) < 5;
+        if (getsSick) {
+          ((Pet) item).setHealthy(false);
+          announce(" visits a " + ((Pet) item).getClass().getSimpleName() + ", and the pet got sick...");
+          sick.add(((Pet) item));
+          itemsToBeRemoved.add(item); // preventing error
+        } else {
+          announce(" visits a " + ((Pet) item).getClass().getSimpleName());
+          announce(" feeds the " + ((Pet) item).getClass().getSimpleName());
+        }
+      }
+    });
+    inventory.removeAll(itemsToBeRemoved);
+    itemsToBeRemoved.clear();
+
+    for (Pet pet : sick) {
+      // 25% change of recovering
+      switch (pet.setHealthy(new SecureRandom().nextInt(100) < 25)) {
+        case 0 -> announce(
+            " feeds a sick " + pet.getClass().getSimpleName() + " and the pet remains ill...");
+        case 1 -> {
+          announce(" feeds a sick " + pet.getClass().getSimpleName()
+                   + " and the pet recovered from its sickness...");
+          inventory.add(pet);
+          itemsToBeRemoved.add(pet); // preventing error
+        }
+      }
+    }
+    sick.removeAll(itemsToBeRemoved);
   }
 
 
   /**
-   * @param name
-   * @param expectedDeliveryDate
-   * @param purchasePrice
+   * @param name                 the name to set
+   * @param expectedDeliveryDate the expectedDeliveryDate to set
+   * @param purchasePrice        the purchasePrice to set
    * @return Delivery Package
    */
   public DeliveryPackage orderItem(String name, int expectedDeliveryDate, double purchasePrice) {
@@ -365,48 +441,6 @@ public class Employee implements Individual, MessageReceiver {
   }
 
 
-  public void doInventory() {
-    // String announcement = "places an order for ";  //TODO\
-
-    Random            rand            = new Random();
-    ArrayList<String> itemToBeRemoved = new ArrayList<String>();
-    ArrayList<String> ITEM_TO_ORDER = new ArrayList<String>(
-        Arrays.asList("Dog", "Cat", "Bird", "Food", "Leash", "CatLitter", "Snake", "Ferret", "Treat"));
-    String announcement        = " checking the inventory...";
-    double totalInventoryValue = 0.0;
-
-    announce(announcement);
-    for (Item item : inventory) {
-      // Initially (Day one), the value should be all zero as all purchase prices should be zero.
-      totalInventoryValue += item.getPurchasePrice();
-      String itemName = item.getClass().getSimpleName();
-      if (ITEM_TO_ORDER.contains(itemName)) {
-        itemToBeRemoved.add(itemName);
-      }
-    }
-
-    announce(" reporting the total inventory value. Total Value: $" + totalInventoryValue);
-    ITEM_TO_ORDER.removeAll(itemToBeRemoved);
-    itemToBeRemoved.clear();
-
-    // ITEM_TO_ORDER is now left with items that need to be ordered (0 stock)
-    for (String name : ITEM_TO_ORDER) {
-      System.out.println(name + " needs to be purchased.");
-      int    expectedDeliveryDate = workedDays + rand.nextInt(3);
-      double purchasePrice        = rand.nextInt(100);
-      if (cash >= purchasePrice) {
-        mailBox.add(orderItem(name, expectedDeliveryDate, purchasePrice));
-        cash -= purchasePrice;
-      } else {
-        // insufficient money
-        System.out.println("Purchase failed: Insufficient money");
-        itemToBeRemoved.add(name);
-      }
-    }
-    ITEM_TO_ORDER.clear();
-  }
-
-
   public void cleanStore() {
     String announcement = " cleans the store...";
     announce(announcement);
@@ -451,6 +485,7 @@ public class Employee implements Individual, MessageReceiver {
     return workedDays;
   }
 
+
   public void incWorkDays() {
     workedDays++;
   }
@@ -488,6 +523,13 @@ public class Employee implements Individual, MessageReceiver {
   }
 
 
+  public void earn(double amount) {
+    this.cash += amount;
+    this.earning += amount;
+    announce("Earned $" + amount + " from a sale.");
+  }
+
+
   public double getCash() {
     return cash;
   }
@@ -502,46 +544,58 @@ public class Employee implements Individual, MessageReceiver {
     return inventory;
   }
 
-  /* synchronized  */
+
   private void execute() {
     if (task != null && task.getStatus() == EventStatus.INCOMPLETE) {
       state = EmployeeState.OCCUPIED;
       task.run();
     } else if (task != null && task.getStatus() == EventStatus.COMPLETE) {
       state = EmployeeState.IDLE;
-      System.out.println("[-] " + base.getNameExt() + " is done with the task of " + task.getTaskType().taskname() + ".");
+      logger.info("[-] " + base.getNameExt() + " is done with the task of " + task.getTaskType().taskname() + ".");
       task = null;
     }
   }
+  /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-  /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Individual Overrides ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+  /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
+                      Individual Overrides 
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
   @Override
   public String getNameExt() {
     return base.getNameExt();
   }
+
 
   @Override
   public String getNameSimple() {
     return base.getNameSimple();
   }
 
+
   @Override
   public void setName(String name) {
     base.setName(name);
   }
+  /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-  /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ MessageReceiver Overrides ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+  /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
+                  MessageReceiver Overrides 
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
   @Override
   public ReceiverType getType() {
     return type;
   }
 
+
   @Override
   public void sendMessage(String message) {
-    System.out.println("[-] " + base.getNameExt() + ": " + message);
+    logger.info("[-] " + base.getNameExt() + ": " + message);
   }
+
 
   @Override
   /*  synchronized  */ public void update(String message, Object event) {
@@ -554,9 +608,9 @@ public class Employee implements Individual, MessageReceiver {
           execute();
         }
       }
-
     }
   }
-
+  /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 }
 

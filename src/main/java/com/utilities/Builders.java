@@ -13,9 +13,10 @@ import main.java.com.store.Store;
 
 
 public record Builders() {
-  
+
   // TODO: THIS IS A TEST VALUE/METHOD
   private static int The_Day = 0;
+
 
   // TODO: THIS IS A TEST VALUE/METHOD
   static void set_The_Day() {
@@ -23,17 +24,19 @@ public record Builders() {
     The_Day = Store.getDay();
   }
 
+
   // TODO: THIS IS A TEST VALUE/METHOD
   public static int get_The_Day() {
     return Store.getDay();
   }
+
 
   // Data helpers
   public static final ArrayList<String> COLORS =
       new ArrayList<String>(Arrays.asList("Black", "Brown", "White", "Gray", "Red"));
 
   public static Integer IndividualID = 0;
-  
+
   public static final boolean[] randomSelectionbool = {true, false};
 
   public static final DecimalFormat sizeFormat = new DecimalFormat("#####.00");
@@ -44,13 +47,13 @@ public record Builders() {
       Arrays.asList("Kevin", "Andrew", "Michelle", "Chris", "Paul", "Jack", "Alex", "John", "David", "Sarah"));
 
 
-  public static ItemType randomItemType() {
-    return ItemType.values()[new Random().nextInt(ItemType.values().length)];
-  }
+
+
 
   public static AnimalType randomAnimalType() {
     return AnimalType.values()[new Random().nextInt(AnimalType.values().length)];
   }
+
 
   public static int randomSizeINT(int min, int max) {
     if (min > max) {
@@ -65,6 +68,7 @@ public record Builders() {
     return min;
   }
 
+
   public static double randomSizeDOUBLE(double min, double max) {
     if (min > max) {
       throw new IllegalArgumentException("Min must be less than max");
@@ -78,9 +82,11 @@ public record Builders() {
     return min;
   }
 
+
   public static FoodType randomFoodType() {
     return FoodType.values()[new Random().nextInt(FoodType.values().length)];
   }
+
 
   public static TrainerType randomTrainingType() {
     return TrainerType.values()[new Random().nextInt(TrainerType.values().length)];

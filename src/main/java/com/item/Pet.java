@@ -9,6 +9,7 @@ public abstract class Pet extends Item {
   int     age;
   boolean healthy;
 
+
   public Pet(
       String name,
       int dayArrived,
@@ -26,6 +27,7 @@ public abstract class Pet extends Item {
     super.setAnimalIdentifier(true);
   }
 
+
   public Pet(Animal animal, int age, boolean healthy) {
     super();
     super.setAnimalIdentifier(true);
@@ -34,22 +36,24 @@ public abstract class Pet extends Item {
     this.healthy = healthy;
   }
 
+
   public Pet(Animal animal) {
     super();
     super.setAnimalIdentifier(true);
     this.animal = animal;
   }
 
+
   public Pet() {
     super.setAnimalIdentifier(true);
   }
+
 
   @Override
   public void setName(String name) {
     super.setName(name);
   }
 
-  public void announce() {}
 
   /**
    * Sets list price.
@@ -61,6 +65,7 @@ public abstract class Pet extends Item {
     super.setListPrice(listPrice);
   }
 
+
   /**
    * Sets sale price.
    *
@@ -71,46 +76,51 @@ public abstract class Pet extends Item {
     super.setSalePrice(salePrice);
   }
 
+
   public Breed getBreed() {
     return this.animal.breed;
   }
+
+
+  public Animal getAnimalType() {
+    return this.animal;
+  }
+
 
   public void setBreed(Breed breed) {
     this.animal.breed = breed;
   }
 
+
   public void setAnimal(AnimalType animal) {
     this.animal.type = animal;
   }
+
 
   public int getAge() {
     return age;
   }
 
+
   public void setAge(int age) {
     this.age = age;
   }
 
+
   public boolean isHealthy() {
     return healthy;
   }
+
 
   public int setHealthy(boolean healthy) {
     this.healthy = healthy;
     return (this.healthy) ? 1 : 0;
   }
 
+
   @Override
   public String toString() {
-    return "Pet{"
-           + "breed="
-           + animal.breed
-           + ", age="
-           + age
-           + ", healthy="
-           + healthy
-           + "} "
-           + super.toString();
+    return animal.toString();
   }
 
 }

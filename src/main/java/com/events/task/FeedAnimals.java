@@ -35,7 +35,7 @@ public class FeedAnimals implements State {
     return 0;
   }
 
-    // state.setStoreState(state.goDoInventory());
+  // state.setStoreState(state.goDoInventory());
 
   @Override
   public boolean hasTask() {
@@ -44,7 +44,7 @@ public class FeedAnimals implements State {
 
   @Override
   public void observe() {
-    
+
   }
 
   @Override
@@ -63,5 +63,7 @@ public class FeedAnimals implements State {
   }
 
   public void update(Object message) {
+    
   }
+
 }

@@ -3,6 +3,7 @@ package main.java.com.events.task;
 import static main.java.com.events.EventStatus.*;
 
 import main.java.com.Logging.*;
+import main.java.com.Logging.LoggerManager.ILogger;
 import main.java.com.events.*;
 import main.java.com.individuals.*;
 import main.java.com.individuals.Employee.*;
@@ -15,10 +16,12 @@ public class VisitBank implements State, Runnable {
   EventStatus  status;
   EmployeeTask task;
 
+
   public VisitBank(Store store) {
     this.storeState = store;
     this.status     = INCOMPLETE;
   }
+
 
   /**
    * When an object implementing interface {@code Runnable} is used to create a thread, starting the thread causes the object's {@code run} method to be
@@ -30,17 +33,19 @@ public class VisitBank implements State, Runnable {
    */
   @Override
   public void run() {
-    
+
   }
+
 
   /**
    * The type Banking.
    */
   class Banking extends EmployeeTask implements State {
-    double   amount;
-    double   cash;
-    Employee employee;
+    double      amount;
+    double      cash;
+    Employee    employee;
     EventStatus status;
+    ILogger     logger;
 
 
     Banking(Employee employee, Store store, VisitBank visitBank) {
@@ -58,8 +63,9 @@ public class VisitBank implements State, Runnable {
         status = IN_PROGRESS;
         super.statusChange(IN_PROGRESS);
         employee = this.getEmployee();
-        amount   = storeState.goToBank(getEmployee());
-        cash     = storeState.getCash();
+        // TODO: FIX THIS
+        amount = storeState.goToBank(getEmployee());
+        cash   = storeState.getCash();
         end();
       }
     }
@@ -70,13 +76,13 @@ public class VisitBank implements State, Runnable {
      */
     public void end() {
       super.statusChange(COMPLETE);
-
-      Logger.LOG(EventLog.bankingEvent(employee, amount, cash));
+      logger.info(EventLog.bankingEvent(employee, amount, cash));
       super.getStatus().setAssigned(false);
       getEmployee().setTask(null);
       getEmployee().setState(EmployeeState.IDLE);
-      notify();
+      // notify();
     }
+
 
     @Override
     public long enterState() {
@@ -84,20 +90,24 @@ public class VisitBank implements State, Runnable {
       return 0;
     }
 
+
     @Override
     public boolean hasTask() {
       return false;
     }
 
+
     @Override
     public void observe() {
-      
+
     }
+
 
     @Override
     public EmployeeTask getTask(Employee employee) {
       return null;
     }
+
 
     @Override
     public void setStatus(EventStatus status) {
@@ -106,17 +116,20 @@ public class VisitBank implements State, Runnable {
 
   }
 
+
   @Override
   public long enterState() throws InterruptedException {
     storeState.notifyEmployees("VisitBank", task);
-  
+
     return 0;
   }
+
 
   @Override
   public boolean hasTask() {
     return false;
   }
+
 
   @Override
   public void observe() {
@@ -128,10 +141,12 @@ public class VisitBank implements State, Runnable {
     return task = new Banking(employee, storeState, this);
   }
 
+
   @Override
   public EventStatus getStatus() {
     return status;
   }
+
 
   @Override
   public void setStatus(EventStatus status) {
