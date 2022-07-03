@@ -203,7 +203,7 @@ public class Store implements EventObservable {
     Employee potentialStaff = staffList.get(rand.nextInt(3));
     if (potentialStaff.getWorkDays() <= 3) {
       if (isSick) {
-        System.out.println(potentialStaff.getNameExt() + " is feeling sick today. Selecting another staff...");
+        System.out.println(potentialStaff.getNameExt() + " is feeling sick today. Selecting another staffer...");
         return pickAvailableStaff(staffList);
       }
 
