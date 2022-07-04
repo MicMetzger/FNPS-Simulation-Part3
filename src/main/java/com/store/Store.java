@@ -39,7 +39,7 @@ public class Store implements EventObservable {
   // The store's individuals.
   ArrayList<Employee>        clerks;
   ArrayList<Employee>        trainers;
-  ArrayList<MessageReceiver> employeeReceivers;
+  static ArrayList<MessageReceiver> employeeReceivers;
   ArrayList<MessageReceiver> receivers;
   ArrayList<MessageReceiver> customerReceivers;
   public Employee currentClerk;
@@ -302,8 +302,12 @@ public class Store implements EventObservable {
       if (selecting) {
         inventory.remove(customer.obj);
         System.out.println("The customer has made a selection!");
-        logger.info("[+] The customer purchases " + customer.obj.getName() + " at $" + customer.getPurchasePrice() + (customer.discount ? " after a 10% discount": ""));
-        System.out.println("[+] The customer purchases " + customer.obj.getName() + " at $" + customer.getPurchasePrice() + (customer.discount ? " after a 10% discount": ""));
+        logger.info(
+            "[+] The customer purchases " + customer.obj.getName() + " at $" + customer.getPurchasePrice() + (customer.discount ? " after a 10% discount"
+                                                                                                                                : ""));
+        System.out.println(
+            "[+] The customer purchases " + customer.obj.getName() + " at $" + customer.getPurchasePrice() + (customer.discount ? " after a 10% discount"
+                                                                                                                                : ""));
         if (customer.obj.isPet()) {
           double total = addRandomAddons(customer.obj);
           saleprice += total;
