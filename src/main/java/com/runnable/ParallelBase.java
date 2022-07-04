@@ -38,6 +38,7 @@ public abstract class ParallelBase extends RunStateManager {
       super.start();
     } catch (RunStateException e) {
       logger.info(e.getMessage());
+      System.out.println(e.getMessage());
     }
   }
   
@@ -47,6 +48,7 @@ public abstract class ParallelBase extends RunStateManager {
       super.suspend();
     } catch (RunStateException e) {
       logger.info(e.getMessage());
+      System.out.println(e.getMessage());
     }
   }
   
@@ -56,6 +58,7 @@ public abstract class ParallelBase extends RunStateManager {
       super.resume();
     } catch (RunStateException e) {
       logger.info(e.getMessage());
+      System.out.println(e.getMessage());
     }
   }
   

@@ -71,7 +71,7 @@ public class Store implements EventObservable {
    * <p>Default constructor
    */
   public Store() {
-    logger          = LoggerManager.getInstance().getLogger(this);
+    logger = LoggerManager.getInstance().getLogger(this);
 
     clerks         = new ArrayList<Employee>();
     trainers       = new ArrayList<Employee>();
@@ -203,6 +203,7 @@ public class Store implements EventObservable {
     Employee potentialStaff = staffList.get(rand.nextInt(3));
     if (potentialStaff.getWorkDays() <= 3) {
       if (isSick) {
+        logger.info(potentialStaff.getNameExt() + " is feeling sick today. Selecting another staffer...");
         System.out.println(potentialStaff.getNameExt() + " is feeling sick today. Selecting another staffer...");
         return pickAvailableStaff(staffList);
       }
@@ -288,22 +289,22 @@ public class Store implements EventObservable {
   public void openStore() {
     double saleprice = 0;
     String print     = "";
+
     // Poisson distribution
     int count = attractCustomers(getPoissonValue(3.0));
-    print = currentClerk.getNameExt() + " opens the store. \nCurrent inventory: " + inventory.size() + " item(s)\nRegister: " + cash;
+    print = currentClerk.getNameExt() + " opens the store. \nCurrent inventory: " + inventory.size() + " item(s)\n Register: " + cash;
     System.out.println(print);
-
+    logger.info(print);
     print = (count + " potential customers enter the store...");
     System.out.println(print);
-
+    logger.info(print);
     for (Customer customer : customers) {
       boolean selecting = customer.inspectInventory(inventory);
       if (selecting) {
         inventory.remove(customer.obj);
         System.out.println("The customer has made a selection!");
-        System.out.println(
-            "[+] The customer purchases " + customer.obj.getName() + " at $" + customer.getPurchasePrice() + (customer.discount ? " after a 10% discount"
-                                                                                                                                : ""));
+        logger.info("[+] The customer purchases " + customer.obj.getName() + " at $" + customer.getPurchasePrice() + (customer.discount ? " after a 10% discount": ""));
+        System.out.println("[+] The customer purchases " + customer.obj.getName() + " at $" + customer.getPurchasePrice() + (customer.discount ? " after a 10% discount": ""));
         if (customer.obj.isPet()) {
           double total = addRandomAddons(customer.obj);
           saleprice += total;
@@ -317,7 +318,7 @@ public class Store implements EventObservable {
 
         // Tracker Log
         try {
-          System.out.println(TrackerManager.getInstance().add(currentClerk, customer.obj));
+          logger.info(TrackerManager.getInstance().add(currentClerk, customer.obj));
         } catch (InterruptedException e) {
           throw new RuntimeException(e);
         }
@@ -326,7 +327,7 @@ public class Store implements EventObservable {
     currentClerk.earn(saleprice);
     cash += saleprice;
 
-    System.out.println("\nCurrent inventory: " + inventory.size() + " item(s)\nCash: " + cash);
+    System.out.println("Current inventory: " + inventory.size() + " item(s)\nCash: " + cash);
   }
 
 
@@ -470,6 +471,8 @@ public class Store implements EventObservable {
     System.out.println("$" + value + " was withdrawn from the bank.\n");
     cash += currentClerk.getCash();
     bankWithdrawal += value;
+    logger.info("Total withdrawal: " + bankWithdrawal);
+    logger.info("Total cash: " + cash);
     System.out.println("Total withdrawal: " + bankWithdrawal);
     System.out.println("Total cash: " + cash);
   }
@@ -497,6 +500,8 @@ public class Store implements EventObservable {
 
 
   public void closeStore() {
+    logger.info(currentClerk.getNameExt() + " closes the store. \nCurrent inventory: " + inventory.size() + " item(s)\nRegister: " + cash);
+    logger.info("\nCurrent inventory: " + inventory.size() + " item(s)\nCash: " + cash);
     System.out.println(currentClerk.getNameExt() + " closes the store. \nCurrent inventory: " + inventory.size() + " item(s)\nRegister: " + cash);
     System.out.println("\nCurrent inventory: " + inventory.size() + " item(s)\nCash: " + cash);
   }

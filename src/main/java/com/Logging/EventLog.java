@@ -106,9 +106,8 @@ public class EventLog {
   public String toString() {
     switch (EVENTTYPE) {
       case EVENT_NEWDAY -> {
-        return "\n" +
-               EVENTTYPE +
-               "\n Day: " + DAY +
+        return "EventLog {\n" +
+               "\n\t Day: " + DAY +
                "\n";
       }
       case EVENT_ARRIVE -> {
@@ -142,7 +141,7 @@ public class EventLog {
         return sb.toString();
       }
       case EVENT_TRACKING -> {
-        return "\n"
+        return "\n\n"
                + "\t" + EVENTTYPE + "Day #" + DAY + "\n"
                + String.format("\t%-20s \t%-20s \t%-20s\n", "Employee", "Sold", "Earnings Total")
                + String.format("\t%-20s", EMPLOYEEONE.getNameSimple())
@@ -168,7 +167,7 @@ public class EventLog {
     EVENT_BANKING("GoToBank: "),
     EVENT_FEEDING("FeedTheAnimals: "),
     EVENT_TRACKING("Tracker: "),
-    EVENT_TRACKING_ALL("Tracker: ");
+    EVENT_TRACKING_ALL("Trackers: ");
 
     private final String eventType;
 

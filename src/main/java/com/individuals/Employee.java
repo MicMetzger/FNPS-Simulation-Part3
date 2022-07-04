@@ -232,6 +232,7 @@ public class Employee implements Individual, MessageReceiver {
 
   public void announce(String announcement) {
     logger.info(getNameExt() + announcement);
+    System.out.println(getNameExt() + announcement);
   }
 
 
@@ -531,7 +532,9 @@ public class Employee implements Individual, MessageReceiver {
 
 
   public double getCash() {
-    return cash;
+    double transfer = this.cash;
+    this.cash = 0;
+    return transfer;
   }
 
 
@@ -551,7 +554,7 @@ public class Employee implements Individual, MessageReceiver {
       task.run();
     } else if (task != null && task.getStatus() == EventStatus.COMPLETE) {
       state = EmployeeState.IDLE;
-      logger.info("[-] " + base.getNameExt() + " is done with the task of " + task.getTaskType().taskname() + ".");
+      System.out.println("[-] " + base.getNameExt() + " is done with the task of " + task.getTaskType().taskname() + ".");
       task = null;
     }
   }
@@ -593,7 +596,7 @@ public class Employee implements Individual, MessageReceiver {
 
   @Override
   public void sendMessage(String message) {
-    logger.info("[-] " + base.getNameExt() + ": " + message);
+    System.out.println("[-] " + base.getNameExt() + ": " + message);
   }
 
 

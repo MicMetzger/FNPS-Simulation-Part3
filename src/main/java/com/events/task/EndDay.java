@@ -2,7 +2,6 @@ package main.java.com.events.task;
 
 import static main.java.com.events.EventStatus.*;
 
-import main.java.com.Logging.LoggerManager.ILogger;
 import main.java.com.Logging.LoggerManager.Logger;
 import main.java.com.utilities.Pair;
 import java.util.*;
@@ -10,7 +9,6 @@ import main.java.com.Logging.*;
 import main.java.com.events.*;
 import main.java.com.individuals.*;
 import main.java.com.store.*;
-import main.java.com.utilities.*;
 
 
 
@@ -27,13 +25,15 @@ public class EndDay implements State {
   List<Employee>              employeeLog;
   List<Pair<Integer, Double>> employeeEarnings;
   Logger                      logger;
-  
+
+
   public EndDay(Store store) {
     this.state  = store;
     this.status = INCOMPLETE;
-    logger          = LoggerManager.getInstance().getLogger(this);
+    logger      = LoggerManager.getInstance().getLogger(this);
 
   }
+
 
   @Override
   public long enterState() {
@@ -42,11 +42,11 @@ public class EndDay implements State {
     employeeLog      = new ArrayList<Employee>(state.getEmployees());
     employeeEarnings = new ArrayList<Pair<Integer, Double>>();
     employeeLog.forEach(employee -> employeeEarnings.add(new Pair<Integer, Double>(employee.getSold(), employee.getEarning())));
-    logger.info(EventLog.tracking(employeeLog, employeeEarnings, Store.getDay()));
     // Logger.LOG(EventLog.tracking(employeeLog, employeeEarnings, state.day));
 
     System.out.println("\n##################################################");
     System.out.println("The workday comes to an end...");
+    logger.info(EventLog.tracking(employeeLog, employeeEarnings, Store.getDay()));
     // TODO: 4
     // empty register and store cash in Store
     state.updateCash();
@@ -55,32 +55,38 @@ public class EndDay implements State {
     return 0;
   }
 
-    // stateMachine.setStoreState(stateMachine.goEndDay());
+  // stateMachine.setStoreState(stateMachine.goEndDay());
+
 
   @Override
   public boolean hasTask() {
     return false;
   }
 
+
   @Override
   public void observe() {
-    
+
   }
+
 
   @Override
   public EmployeeTask getTask(Employee employee) {
     return null;
   }
 
+
   @Override
   public EventStatus getStatus() {
     return status;
   }
 
+
   @Override
   public void setStatus(EventStatus status) {
     this.status = status;
   }
+
 
   public void update(Object message) {
   }

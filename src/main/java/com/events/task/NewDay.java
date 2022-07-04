@@ -2,9 +2,9 @@ package main.java.com.events.task;
 
 import static main.java.com.events.EventStatus.*;
 
-import java.util.*;
-import java.util.logging.Logger;
-import main.java.com.Logging.*;
+import main.java.com.Logging.EventLog;
+import main.java.com.Logging.LoggerManager;
+import main.java.com.Logging.LoggerManager.Logger;
 import main.java.com.events.*;
 import main.java.com.individuals.*;
 import main.java.com.store.*;
@@ -21,6 +21,7 @@ public class NewDay implements State {
   public NewDay(Store store) {
     this.state  = store;
     this.status = INCOMPLETE;
+    this.logger = LoggerManager.getInstance().getLogger(this);
   }
 
   @Override
@@ -34,7 +35,7 @@ public class NewDay implements State {
     //   exitState();
     // }
     System.out.println("Day: " + Store.getDay());
-    // logger.info(EventLog.newDayEvent(Store.getDay()).toString());
+    logger.info(EventLog.newDayEvent(Store.getDay()).toString());
     this.status = COMPLETE;
     System.out.println("**************************************************\n");
     Utilities.gapTime();

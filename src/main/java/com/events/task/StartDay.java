@@ -35,7 +35,7 @@ public class StartDay implements State {
   @Override
   public long enterState() throws InterruptedException {
     this.status = IN_PROGRESS;
-
+    
     employees = state.selectStaff();
     pets      = state.getAnimals();
     supplies  = state.getSupplies();

@@ -4,6 +4,7 @@ import static main.java.com.events.EventStatus.*;
 
 import main.java.com.Logging.*;
 import main.java.com.Logging.LoggerManager.ILogger;
+import main.java.com.Logging.LoggerManager.Logger;
 import main.java.com.events.*;
 import main.java.com.individuals.*;
 import main.java.com.individuals.Employee.*;
@@ -15,11 +16,13 @@ public class VisitBank implements State, Runnable {
   Store        storeState;
   EventStatus  status;
   EmployeeTask task;
+  Logger      logger;
 
 
   public VisitBank(Store store) {
     this.storeState = store;
     this.status     = INCOMPLETE;
+    this.logger     = LoggerManager.getInstance().getLogger(this);
   }
 
 
@@ -45,7 +48,6 @@ public class VisitBank implements State, Runnable {
     double      cash;
     Employee    employee;
     EventStatus status;
-    ILogger     logger;
 
 
     Banking(Employee employee, Store store, VisitBank visitBank) {

@@ -23,7 +23,6 @@ public class LoggerManager implements MessageReceiver {
   public static final     String              LOGFILE       = "LoggerManager-";
   public static           String              LOGINPUTPATH  = "";
   public static           SimpleDateFormat    DATEFORMAT    = new SimpleDateFormat("yyyy-MM-dd");
-  // private static          List<Log>           LOGS          = new ArrayList<>();
   private static          int                 LOG_COUNT     = 0;
   protected static        int                 ID_TAG        = 0;
   protected static        Map<String, Logger> listeners;
@@ -58,11 +57,11 @@ public class LoggerManager implements MessageReceiver {
 
 
   public Logger getLogger(Object obj) {
-    if (listeners.containsKey(obj.getClass().getCanonicalName())) {
-      return listeners.get(obj.getClass().getCanonicalName());
+    if (listeners.containsKey(obj.getClass().getSimpleName())) {
+      return listeners.get(obj.getClass().getSimpleName());
     } else {
-      Logger listener = new Logger(obj.getClass().getCanonicalName());
-      listeners.put(obj.getClass().getCanonicalName(), listener);
+      Logger listener = new Logger(obj.getClass().getSimpleName());
+      listeners.put(obj.getClass().getSimpleName(), listener);
       return listener;
     }
   }
@@ -98,7 +97,7 @@ public class LoggerManager implements MessageReceiver {
 
 
     public void info(String msg) {
-      System.out.println("[@ " + name + "]: " + msg);
+      // System.out.println("[@" + name + "]: " + msg);
 
       Log log = new Log(msg);
       logs.add(log);
@@ -106,11 +105,15 @@ public class LoggerManager implements MessageReceiver {
 
 
     public void info(EventLog event) {
-      System.out.println("[@ " + name + "]: " + event.toString());
+      // System.out.println("[@" + name + "]: " + event.toString());
 
       Log log = new Log(event.toString());
       logs.add(log);
     }
+    
+    // public void out(String msg) {
+    //   System.out.println("[@ " + name + "]: " + msg);
+    // }
 
     
     @Override
@@ -163,7 +166,7 @@ public class LoggerManager implements MessageReceiver {
         } catch (IOException e) {
           throw new RuntimeException(e);
         }
-      };
+      }
       // output.write(data);
     } catch (IOException ignored) {
       System.out.println("Logger: Error: Unable to save logs.");
