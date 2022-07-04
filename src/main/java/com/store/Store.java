@@ -289,10 +289,9 @@ public class Store implements EventObservable {
   public void openStore() {
     double saleprice = 0;
     String print     = "";
-
     // Poisson distribution
     int count = attractCustomers(getPoissonValue(3.0));
-    print = currentClerk.getNameExt() + " opens the store. \nCurrent inventory: " + inventory.size() + " item(s)\n Register: " + cash;
+    print = currentClerk.getNameExt() + " opens the store. \nCurrent inventory: " + inventory.size() + " item(s)\n Register: " + this.cash;
     System.out.println(print);
     logger.info(print);
     print = (count + " potential customers enter the store...");
@@ -311,7 +310,7 @@ public class Store implements EventObservable {
           System.out.println(" ++ $" + total);
         } else {
           System.out.println(" ++ $" + customer.getPurchasePrice());
-          cash += customer.getPurchasePrice();
+          this.cash += customer.getPurchasePrice();
         }
         customer.obj.setDaySold(day);
         soldItems.add(customer.obj);
@@ -325,9 +324,9 @@ public class Store implements EventObservable {
       }
     }
     currentClerk.earn(saleprice);
-    cash += saleprice;
+    this.cash += saleprice;
 
-    System.out.println("Current inventory: " + inventory.size() + " item(s)\nCash: " + cash);
+    System.out.println("Current inventory: " + inventory.size() + " item(s)\nCash: " + this.cash);
   }
 
 
@@ -461,16 +460,18 @@ public class Store implements EventObservable {
 
   /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Mutators ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
   public double goToBank(Employee employee) {
-    double value = employee.goToBank();
-    addWithdrawal(value);
-    return value;
+    employee.goToBank();
+    // double value = employee.goToBank();
+    addWithdrawal();
+    return 1000;
   }
 
 
-  private void addWithdrawal(double value) {
-    System.out.println("$" + value + " was withdrawn from the bank.\n");
-    cash += currentClerk.getCash();
-    bankWithdrawal += value;
+  private void addWithdrawal() {
+    System.out.println("$" + (double) 1000 + " was withdrawn from the bank.\n");
+    logger.info("$" + (double) 1000 + " was withdrawn from the bank.");
+    this.cash += currentClerk.getCash();
+    this.bankWithdrawal += 1000;
     logger.info("Total withdrawal: " + bankWithdrawal);
     logger.info("Total cash: " + cash);
     System.out.println("Total withdrawal: " + bankWithdrawal);
