@@ -79,7 +79,7 @@ public class CatLitter extends Supplies {
       super.setListPrice(round(new SecureRandom().nextDouble(100)));
       super.setPurchasePrice(0);
       // TODO: all these values need bounding checks.
-      super.setSalePrice(round(new SecureRandom().nextDouble(0, getListPrice())));
+      super.setSalePrice(round(new SecureRandom().nextDouble(getListPrice())));
       super.setDayArrived(get_The_Day());
       super.setDaySold(0);
     } else {

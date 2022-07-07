@@ -20,7 +20,11 @@ import main.java.com.store.*;
 
 
 public class Employee implements Individual, MessageReceiver {
-
+  public static ArrayList<String>
+      NAME_TEMPLATE = new ArrayList<String>(
+      Arrays.asList("Kevin", "Andrew", "Michelle", "Chris", "Paul", "Jack", "Alex", "John", "David", "Sarah",
+          "Nicolas", "Juan", "Ricardo", "Jorge", "Agustin", "Adriel", "Reese", "Braedyn", "Candice", "Cyrus",
+          "Lourdes", "Jadon", "Braxten"));
   //  private List<Watcher> watcher = new ArrayList<>();
   ArrayList<Item>            inventory;
   ArrayList<Pet>             sick;
@@ -35,8 +39,8 @@ public class Employee implements Individual, MessageReceiver {
   private       EmployeeState state;
   private       boolean       ACTIVE;
   private       ReceiverType  type;
-  private final int    ID;
-  private       Logger logger;
+  private final int           ID;
+  private       Logger        logger;
 
 
 
@@ -71,7 +75,7 @@ public class Employee implements Individual, MessageReceiver {
 
   public Employee() {
     ID         = counter.incrementAndGet();
-    logger          = LoggerManager.getInstance().getLogger(this);
+    logger     = LoggerManager.getInstance().getLogger(this);
     workedDays = 0;
     inventory  = new ArrayList<>();
     cash       = 0;
@@ -340,11 +344,11 @@ public class Employee implements Individual, MessageReceiver {
   }
 
 
-  public void feedAnimals() {
+  synchronized public void feedAnimals() {
     String announcement = " goes to feed the animals...";
     announce(announcement);
     ArrayList<Item> itemsToBeRemoved = new ArrayList<>();
-    inventory.forEach(item -> {
+    this.inventory.forEach(item -> {
       // TODO: this evaluation seems to fail, may be an issue when purchasing animals and initializing
       if (item.isPet()) {
         // 5% chance of getting sick
@@ -361,7 +365,7 @@ public class Employee implements Individual, MessageReceiver {
         }
       }
     });
-    inventory.removeAll(itemsToBeRemoved);
+    this.inventory.removeAll(itemsToBeRemoved);
     itemsToBeRemoved.clear();
 
     for (Pet pet : sick) {

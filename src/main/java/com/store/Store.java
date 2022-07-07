@@ -20,14 +20,20 @@ import main.java.com.item.addOns.*;
 import main.java.com.item.pets.*;
 import main.java.com.item.pets.enums.*;
 import main.java.com.item.supplies.*;
+import main.java.com.runnable.ParallelStance;
+import main.java.com.runnable.RunStateManager;
 
 
 
-public class Store implements EventObservable {
-  private Logger logger;
+public class Store extends ParallelStance implements EventObservable {
+  private        Logger                     logger;
+  private final  Thread                     runner;
+  private static ArrayList<RunStateManager> threads = new ArrayList<RunStateManager>(2);
+  public final   String                     name;
   // private final       Object MONITOR = new Object();
   State newDay, startDay, endDay, processDelivery, feedAnimals, visitBank, checkRegister, doInventory, trainAnimals, openStore, cleanStore, endSimulation, currentState, endState, previousState;
-  static List<State> states;
+  // static List<State> states;
+
 
   // The store's Inventory.
   ArrayList<Item>            inventory;
@@ -37,9 +43,9 @@ public class Store implements EventObservable {
   ArrayList<DeliveryPackage> mailBox;
   MessageReceiver            inventoryReceiver;
   // The store's individuals.
-  ArrayList<Employee>        clerks;
-  ArrayList<Employee>        trainers;
-  static ArrayList<MessageReceiver> employeeReceivers;
+  ArrayList<Employee>        clerks            = new ArrayList<Employee>();
+  ArrayList<Employee>        trainers          = new ArrayList<Employee>();
+  static ArrayList<MessageReceiver> employeeReceivers = new ArrayList<MessageReceiver>();
   ArrayList<MessageReceiver> receivers;
   ArrayList<MessageReceiver> customerReceivers;
   public Employee currentClerk;
@@ -48,10 +54,10 @@ public class Store implements EventObservable {
   private State state;
 
   // Money + day management
-  private       double bankWithdrawal;
-  private       double cash;
-  public static int    day;
-
+  private       double  bankWithdrawal;
+  private       double  cash;
+  public static int     day;
+  private       boolean INITIALIZED = false;
   // private static final class InstanceHolder {
   //   private static final Store instance = new Store();
   //
@@ -71,10 +77,11 @@ public class Store implements EventObservable {
    * <p>Default constructor
    */
   public Store() {
+    super();
+    name   = toString();
     logger = LoggerManager.getInstance().getLogger(this);
-
-    clerks         = new ArrayList<Employee>();
-    trainers       = new ArrayList<Employee>();
+    runner = new Thread(this, toString());
+    threads.add(this);
     customers      = new ArrayList<Customer>();
     inventory      = new ArrayList<Item>();
     sick           = new ArrayList<Pet>();
@@ -83,27 +90,45 @@ public class Store implements EventObservable {
     bankWithdrawal = 0;
     cash           = 0;
     day            = 0;
+
+    init();
   }
+
+
+  public Store(String name, ILogQueue eventQueue) {
+    super(name, eventQueue);
+    this.name = name;
+    logger    = LoggerManager.getInstance().getLogger(this);
+    runner    = new Thread(this, toString());
+    threads.add(this);
+    customers      = new ArrayList<Customer>();
+    inventory      = new ArrayList<Item>();
+    sick           = new ArrayList<Pet>();
+    mailBox        = new ArrayList<DeliveryPackage>();
+    soldItems      = new ArrayList<Item>();
+    bankWithdrawal = 0;
+    cash           = 0;
+    day            = 0;
+    init();
+  }
+
+
   /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+  void init() {
+    if (!INITIALIZED) {
+      initiateStaff();
+      initiateAnimals();
+      initiateSupplies();
+      initStates();
+      this.state = new NewDay(this);
+    }
+  }
 
 
   /**
    * Initiate starting objects.
    */
-  public void initiateStaff() {
-   /*  
-    clerks.add(new Clerk());
-    clerks.add(new Clerk());
-    clerks.add(new Clerk());
-    trainers.add(new Trainer(pool.createObject(ReceiverType.TRAINER, )));
-    trainers.add(new Trainer("Negative"));
-    trainers.add(new Trainer("Positive"));
-
-    employeeReceivers = new ArrayList<MessageReceiver>();
-    employeeReceivers.addAll(clerks);
-    employeeReceivers.addAll(trainers);
-     */
-
+  public synchronized void initiateStaff() {
     EmployeePool pool = new EmployeePool();
     clerks.add(pool.createObject(ReceiverType.CLERK, ""));
     clerks.add(pool.createObject(ReceiverType.CLERK, ""));
@@ -111,6 +136,8 @@ public class Store implements EventObservable {
     trainers.add(pool.createObject(ReceiverType.TRAINER, "Haphazard"));
     trainers.add(pool.createObject(ReceiverType.TRAINER, "Negative"));
     trainers.add(pool.createObject(ReceiverType.TRAINER, "Positive"));
+    employeeReceivers.addAll(clerks);
+    employeeReceivers.addAll(trainers);
   }
 
 
@@ -156,7 +183,7 @@ public class Store implements EventObservable {
 
 
   public void initStates() {
-    states          = Collections.synchronizedList(new ArrayList<State>());
+    // states          = Collections.synchronizedList(new ArrayList<State>());
     newDay          = new NewDay(this);
     startDay        = new StartDay(this);
     endDay          = new EndDay(this);
@@ -169,31 +196,28 @@ public class Store implements EventObservable {
     openStore       = new OpenStore(this);
     endSimulation   = new EndSimulation(this);
 
-    states.add(startDay);
-    states.add(endDay);
-    states.add(feedAnimals);
-    states.add(visitBank);
-    states.add(checkRegister);
-    states.add(doInventory);
-    states.add(openStore);
-    states.add(cleanStore);
-    states.add(endSimulation);
+    // states.add(startDay);
+    // states.add(endDay);
+    // states.add(feedAnimals);
+    // states.add(visitBank);
+    // states.add(checkRegister);
+    // states.add(doInventory);
+    // states.add(openStore);
+    // states.add(cleanStore);
+    // states.add(endSimulation);
   }
 
 
-  public void StartSimulation() throws InterruptedException {
-    state = new NewDay(this);
-    state.enterState();
-    timePasses();
-  }
+  // public ArrayList<State> getStates() {
+  //   return (ArrayList<State>) states;
+  // }
 
 
-  public ArrayList<State> getStates() {
-    return (ArrayList<State>) states;
-  }
-
-
-  Employee pickAvailableStaff(ArrayList<Employee> staffList) {
+  /**
+   * @param staffList
+   * @return
+   */
+  synchronized Employee pickAvailableStaff(ArrayList<Employee> staffList) {
     SecureRandom rand   = new SecureRandom();
     boolean      isSick = rand.nextInt(100) < 10;
     // TEST #1: Add a check for noo employees.
@@ -235,7 +259,7 @@ public class Store implements EventObservable {
   /**
    * Select staff to man store for this day.
    */
-  public List<Employee> selectStaff() {
+  synchronized public List<Employee> selectStaff() {
     currentClerk = pickAvailableStaff(clerks);
     currentClerk.setACTIVE(true);
     currentClerk.setTask(null);
@@ -244,7 +268,7 @@ public class Store implements EventObservable {
     currentTrainer.setACTIVE(true);
     currentTrainer.setTask(null);
 
-    employeeReceivers = new ArrayList<MessageReceiver>(Arrays.asList(currentClerk, currentTrainer));
+    // employeeReceivers = new ArrayList<MessageReceiver>(Arrays.asList(currentClerk, currentTrainer));
     return Arrays.asList(currentClerk, currentTrainer);
   }
 
@@ -286,21 +310,21 @@ public class Store implements EventObservable {
   }
 
 
-  public void openStore() {
+  synchronized public void openStore() {
     double saleprice = 0;
     String print     = "";
     // Poisson distribution
     int count = attractCustomers(getPoissonValue(3.0));
-    print = currentClerk.getNameExt() + " opens the store. \nCurrent inventory: " + inventory.size() + " item(s)\n Register: " + this.cash;
+    print = this.currentClerk.getNameExt() + " opens the store, " + this.name + ". \nCurrent inventory: " + this.inventory.size() + " item(s)\n Register: " + this.cash;
     System.out.println(print);
     logger.info(print);
     print = (count + " potential customers enter the store...");
     System.out.println(print);
     logger.info(print);
-    for (Customer customer : customers) {
-      boolean selecting = customer.inspectInventory(inventory);
+    for (Customer customer : this.customers) {
+      boolean selecting = customer.inspectInventory(this.inventory);
       if (selecting) {
-        inventory.remove(customer.obj);
+        this.inventory.remove(customer.obj);
         System.out.println("The customer has made a selection!");
         logger.info(
             "[+] The customer purchases " + customer.obj.getName() + " at $" + customer.getPurchasePrice() + (customer.discount ? " after a 10% discount"
@@ -317,7 +341,7 @@ public class Store implements EventObservable {
           this.cash += customer.getPurchasePrice();
         }
         customer.obj.setDaySold(day);
-        soldItems.add(customer.obj);
+        this.soldItems.add(customer.obj);
 
         // Tracker Log
         try {
@@ -330,7 +354,7 @@ public class Store implements EventObservable {
     currentClerk.earn(saleprice);
     this.cash += saleprice;
 
-    System.out.println("Current inventory: " + inventory.size() + " item(s)\nCash: " + this.cash);
+    System.out.println("Current inventory: " + this.inventory.size() + " item(s)\nCash: " + this.cash);
   }
 
 
@@ -577,7 +601,7 @@ public class Store implements EventObservable {
 
 
   private void timePasses() throws InterruptedException {
-    do {
+    if (day < 30) {
       if (state.getStatus() == COMPLETE) {
         if (newDay.getClass().equals(state.getClass())) {
           goEnterState(startDay);
@@ -596,16 +620,20 @@ public class Store implements EventObservable {
         } else if (cleanStore.getClass().equals(state.getClass())) {
           goEnterState(endDay);
         } else if (endDay.getClass().equals(state.getClass())) {
-          goEnterState(newDay);
+          this.suspend();
         }
       } else {
         if (state.getStatus() == INCOMPLETE) {
-          state.observe();
+          // state.observe();
+          state.enterState();
         }
       }
       // incrementDay();
-    } while (day < 30);
-    goEnterState(new EndSimulation(this));
+    } else {
+      // goEndSimulation();
+      goEnterState(new EndSimulation(this));
+
+    }
 
   }
 
@@ -726,6 +754,76 @@ public class Store implements EventObservable {
       for (MessageReceiver receiver : receiversLocal) {
         receiver.update(message, argument);
       }
+    }
+  }
+
+
+  /**
+   * When an object implementing interface {@code Runnable} is used
+   * to create a thread, starting the thread causes the object's
+   * {@code run} method to be called in that separately executing
+   * thread.
+   * <p>
+   * The general contract of the method {@code run} is that it may
+   * take any action whatsoever.
+   *
+   * @see Thread#run()
+   */
+  @Override
+  public void run() {
+    logger.info("Simulation started on " + new Date() + " for" + this.name);
+    while (!isKilled()) {
+      try {
+        timePasses();
+
+        if (isSuspended()) {
+
+          int counter = 0;
+          for (var t : threads) {
+            if (t.isSuspended()) {
+              counter++;
+            }
+          }
+          if (counter == threads.size()) {
+            for (RunStateManager t2 : threads) {
+              t2.resume();
+            }
+          }
+
+          while (isSuspended()) {
+            continue;
+          }
+          logger.info("Store: " + this.name + ". RESUMED");
+          System.out.println("Store: " + this.name + ". RESUMED");
+          goEnterState(newDay);
+
+        }
+      } catch (InterruptedException ex) {
+        ex.printStackTrace();
+      } catch (RunStateException e) {
+        throw new RuntimeException(e);
+      }
+
+    }
+    if (isKilled()) {
+      logger.info("Store: " + this.name + ". KILLED");
+      System.out.println("Store: " + this.name + ". KILLED");
+    }
+  }
+
+
+  @Override
+  public synchronized void startSimulation() {
+    // this.notify();
+    try {
+      // this.notify();
+      while (!isSYNCED()) {
+        wait();
+      }
+      super.startSimulation();
+      this.runner.start();
+    } catch (IllegalMonitorStateException | InterruptedException | RunStateException e1) {
+      logger.info(e1.getMessage());
     }
   }
   /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */

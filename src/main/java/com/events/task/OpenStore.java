@@ -30,8 +30,8 @@ public class OpenStore implements State {
     this.status = IN_PROGRESS;
 
     System.out.println("\n##################################################");
-    state.openStore();
-    state.updateCash();
+    this.state.openStore();
+    this.state.updateCash();
     this.status = COMPLETE;
 
     System.out.println("##################################################\n");

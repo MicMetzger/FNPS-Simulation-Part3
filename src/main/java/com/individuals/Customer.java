@@ -31,12 +31,12 @@ public class Customer implements Individual, MessageReceiver {
     isFinished    = false;
   }
 
-  public boolean inspectInventory(ArrayList<Item> inventory) {
+  synchronized public boolean inspectInventory(ArrayList<Item> inventory) {
     System.out.println("The customer inspects the store's offerings...");
     inventory.forEach(
         item -> {
           SecureRandom rand = new SecureRandom();
-          int          roll = rand.nextInt(0, 10);
+          int          roll = rand.nextInt(10);
 
           if (roll == 1) {
             // TODO: add a functionality where the desired item is out of stock

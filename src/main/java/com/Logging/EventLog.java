@@ -25,7 +25,8 @@ public class EventLog {
   public final  int                         DAY;
   public final  Pair<Double, Double>        CASH;
 
-  private EventLog(EventType eventType, Employee employeeOne, Employee employeeTwo, List<Employee> employees, Pet pet, List<Pet> pets,
+
+  EventLog(EventType eventType, Employee employeeOne, Employee employeeTwo, List<Employee> employees, Pet pet, List<Pet> pets,
       Supplies supply, List<Supplies> supplies, Customer customer, List<Customer> customers,
       List<Pair<Integer, Double>> earnings, Pair<Integer, Double> earnings_pair, int day, int[] data, double withdrawl, double cash) {
     this.EVENTTYPE     = eventType;
@@ -47,7 +48,27 @@ public class EventLog {
 
   }
 
+
+  public EventLog(EventType eventConnectionClose) {
+    this.EVENTTYPE     = eventConnectionClose;
+    this.EMPLOYEEONE   = null;
+    this.EMPLOYEETWO   = null;
+    this.EMPLOYEES     = null;
+    this.PET           = null;
+    this.PETS          = null;
+    this.SUPPLY        = null;
+    this.SUPPLIES      = null;
+    this.CUSTOMER      = null;
+    this.CUSTOMERS     = null;
+    this.EARNINGS      = null;
+    this.EARNINGS_PAIR = null;
+    this.DAY           = 0;
+    this.DATA          = null;
+    this.CASH          = null;
+  }
+
   // public EventLog() {}
+
 
   public static EventLog newDayEvent(int day) {
     return new EventLog(EventType.EVENT_NEWDAY, null, null, null, null, null, null,
@@ -63,36 +84,46 @@ public class EventLog {
         null, null, null, null, -0, null, 0.0, 0.0);
   }
 
+
   public static EventLog bankingEvent(Employee employee, double withdrawl, double cash) {
     return new EventLog(EventType.EVENT_BANKING, employee, null, null, null, null, null, null,
         null, null, null, null, -0, null, withdrawl, cash);
   }
+
 
   public static EventLog petEvent(Employee employee, Pet pet) {
     return new EventLog(EventType.EVENT_FEEDING, employee, null, null, pet, null, null, null,
         null, null, null, null, -0, null, 0.0, 0.0);
   }
 
+
   public static EventLog suppliesEvent(Employee employee, Supplies supply) {
     return new EventLog(EventType.EVENT_PROCESSING, employee, null, null, null, null, supply, null,
         null, null, null, null, -0, null, 0.0, 0.0);
   }
+
 
   public static EventLog customerEvent(Employee employee, Customer customer) {
     return new EventLog(EventType.EVENT_SELLING, employee, null, null, null, null, null, null,
         null, null, null, null, -0, null, 0.0, 0.0);
   }
 
+
   public static EventLog tracking(List<Employee> employees, List<Pair<Integer, Double>> earning, int day) {
     return new EventLog(EventType.EVENT_TRACKING_ALL, null, null, employees, null, null, null, null,
         null, null, earning, null, day, null, 0.0, 0.0);
   }
 
+
   public static EventLog tracking(Employee employee, Pair<Integer, Double> earning, int day) {
     return new EventLog(EventType.EVENT_TRACKING, employee, null, null, null, null, null, null,
         null, null, null, earning, day, null, 0.0, 0.0);
   }
-  
+
+
+  public static EventLog close() {
+    return new EventLog(EventType.EVENT_CONNECTION_CLOSE);
+  }
   
   /*
   public static EventLog employeeEvent(Employee employee, Employee employeeTwo) {
@@ -166,14 +197,17 @@ public class EventLog {
     EVENT_CLEANING("CleanTheStore: "),
     EVENT_BANKING("GoToBank: "),
     EVENT_FEEDING("FeedTheAnimals: "),
+    EVENT_CONNECTION_CLOSE("ConnectionClose: "),
     EVENT_TRACKING("Tracker: "),
     EVENT_TRACKING_ALL("Trackers: ");
 
     private final String eventType;
 
+
     EventType(String s) {
       eventType = s;
     }
+
 
     @Override
     public String toString() {

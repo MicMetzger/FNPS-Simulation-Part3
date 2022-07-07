@@ -7,7 +7,7 @@ import main.java.com.runnable.RunStateManager.RunStateException.Cause;
 
 public abstract class RunStateManager implements Runnable {
   private RunState state;
-  RunStateException exception;
+  // static  RunStateException exMsg;
   // private boolean  isRunning = false;
   // private boolean  isPaused  = false;
 
@@ -30,14 +30,18 @@ public abstract class RunStateManager implements Runnable {
     this.state = state;
   }
 
-
   // public abstract void run();
 
 
-  public void start() throws RunStateException {
+  /**
+   * Part of the sequence that starts the thread.
+   * Overrided by the store to start an instance thread.
+   *
+   * @throws RunStateException if the thread is not in the INITIALIZED state.
+   */
+  public void startSimulation() throws RunStateException {
     if (this.state == RunState.INITIALIZED) {
       this.state = RunState.ACTIVE;
-      new Thread(this).start();
     } else {
       throw new RunStateException("Cannot start a RunStateManager that is not in the INITIALIZED state.", Cause.ILLEGALSTATEEXCEPTION);
     }
@@ -59,7 +63,7 @@ public abstract class RunStateManager implements Runnable {
   }
 
 
-  public synchronized boolean isPaused() {
+  public synchronized boolean isSuspended() {
     return this.state == RunState.SUSPENDED;
   }
 
@@ -83,7 +87,12 @@ public abstract class RunStateManager implements Runnable {
   }
 
 
-  class RunStateException extends Exception {
+  protected boolean isInitialized() {
+    return this.state == RunState.INITIALIZED;
+  }
+
+
+  public static class RunStateException extends Exception {
     private Cause  cause;
     private String message;
     private Object object;
@@ -111,20 +120,28 @@ public abstract class RunStateManager implements Runnable {
 
 
     public String getMessage() {
-      if (exception.message == null) {
-        return "Undefined cause";
-      } else {
-        return switch (cause) {
-          case DEADLOCK -> "Detected " + Cause.DEADLOCK.name() + " cause.\n" +
-                           "The state transition you try to do is not allowed.";
-          case ILLEGALSTATEEXCEPTION -> "Detected " + Cause.ILLEGALSTATEEXCEPTION.name() + " cause.\n" +
-                                        "The state transition you try to do is not allowed.";
-          case UNHANDLEDSTATEREJECTION -> "Detected " + Cause.UNHANDLEDSTATEREJECTION.name() + " cause.\n" +
-                                          "The state transition you try to do is not allowed.";
-        };
+      // if (message == null) {
+      //   return "Undefined cause";
+      // } else {
+      switch (cause) {
+        case DEADLOCK: {
+          return "Detected " + Cause.DEADLOCK.name() + " cause.\n" + "The state transition you try to do is not allowed.";
+        }
+        case ILLEGALSTATEEXCEPTION: {
+          return "Detected " + Cause.ILLEGALSTATEEXCEPTION.name() + " cause.\n" + "The state transition you try to do is not allowed.";
+        }
+        case UNHANDLEDSTATEREJECTION: {
+          return "Detected " + Cause.UNHANDLEDSTATEREJECTION.name() + " cause.\n" +
+                 "The state transition you try to do is not allowed.";
+        }
+        default: {
+          return "Undefined cause";
+        }
       }
+
     }
   }
 }
+
 
   

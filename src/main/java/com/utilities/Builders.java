@@ -43,8 +43,7 @@ public record Builders() {
 
   public static final AtomicInteger counter = new AtomicInteger(0);
 
-  public static ArrayList<String> NAME_TEMPLATE = new ArrayList<String>(
-      Arrays.asList("Kevin", "Andrew", "Michelle", "Chris", "Paul", "Jack", "Alex", "John", "David", "Sarah"));
+  
 
 
 
